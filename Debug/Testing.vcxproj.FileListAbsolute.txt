@@ -1,0 +1,2 @@
+C:\Software Stuff\TestingOpenGL\Testing\Debug\Testing.exe
+C:\Software Stuff\TestingOpenGL\Testing\Debug\Testing.pdb
