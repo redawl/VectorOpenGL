@@ -14,6 +14,10 @@ void framebuffer_size_callback(GLFWwindow* window, int width, int height);//chan
 void processInput(GLFWwindow* window);//checks if the user has hit the escape key, and terminates the window if so
 void initialize(unsigned int& vao, Shader& ourShader, float*& vertices);//initializes all necessary objects
 void display(unsigned int& vao, Shader& ourShader, int currTime, float* vertices);//call this each loop
+void key_callback(GLFWwindow* window, int key, int scancode, int action, int mods);//used for getting keypresses
+void scroll_callback(GLFWwindow* window, double xoffset, double yoffset);//scrollwheel 
+
+double y_offset = 0;//current x offset from scroll wheel
 
 int main(void)
 {
@@ -23,7 +27,7 @@ int main(void)
 	glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 3);
 	glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
 
-	GLFWwindow* window = glfwCreateWindow(2160, 2160, "Vector Field Generator", NULL, NULL);
+	GLFWwindow* window = glfwCreateWindow(1080, 1080, "Vector Field Generator", NULL, NULL);
 	
 	if (window == NULL) {
 		std::cout << "Failed to create GLFW window" << std::endl;
@@ -39,7 +43,7 @@ int main(void)
 		return -1;
 	}
 
-	glViewport(0, 0, 2160, 2160);
+	glViewport(0, 0, 1080, 1080);
 	glEnable(GL_PROGRAM_POINT_SIZE);
 
 	unsigned int vao;
@@ -50,9 +54,10 @@ int main(void)
 	initialize(vao, ourShader, vertices);
 
 	int currTime = 0;
+	glfwSetScrollCallback(window, scroll_callback);
 	unsigned int timeLoc = glGetUniformLocation(ourShader.ID, "time");
 	while (!glfwWindowShouldClose(window)) {
-		glClearColor(0.0, 0.0, 0.0, -0.01f);
+		glClearColor(0.0, 0.0, 0.0, 1.0f);
 		glClear(GL_COLOR_BUFFER_BIT);
 
 		if(currTime < 100)
@@ -108,6 +113,19 @@ void display(unsigned int& vao, Shader& ourShader, int currTime, float* vertices
 	glBindVertexArray(vao);
 	glBufferSubData(GL_ARRAY_BUFFER, 0, 3 * (numVertices * numVertices) * sizeof(float), vertices);
 	ourShader.setInt("currTime", currTime);
+	ourShader.setFloat("Scale", (float)y_offset);
 	ourShader.use();
 	glDrawArrays(GL_POINTS, 0, 2 * (numVertices * numVertices));
+}
+
+void key_callback(GLFWwindow* window, int key, int scancode, int action, int mods)
+{
+	if (key == GLFW_KEY_E && action == GLFW_PRESS);
+		//activate_airship();
+}
+
+void scroll_callback(GLFWwindow* window, double xoffset, double yoffset)
+{
+	y_offset += yoffset;
+	std::cout << y_offset << std::endl;
 }
