@@ -32,7 +32,7 @@ void main(){
 	int index = int(the_time[0].a_time);
 	
 	for(int i = index; i >= 0; i--){
-		gl_Position = scaler * vec4(x + currX- 1.0f, y + currY + 1.0f, 0.0, 1.0);
+		gl_Position = scaler * vec4(x + currX, y + currY, 0.0, 1.0);
 		ColorVec = vec4(r, 0, b, 1.0f);
 		EmitVertex();
 		r *= fade;

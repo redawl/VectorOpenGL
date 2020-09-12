@@ -10,6 +10,7 @@
 #include <time.h>
 
 const int numVertices = 100;
+const int sizeOfWindow = 1080;
 void framebuffer_size_callback(GLFWwindow* window, int width, int height);//changes the layout of pixels with the window size
 void processInput(GLFWwindow* window);//checks if the user has hit the escape key, and terminates the window if so
 void initialize(unsigned int& vao, Shader& ourShader, float*& vertices);//initializes all necessary objects
@@ -27,7 +28,7 @@ int main(void)
 	glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 3);
 	glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
 
-	GLFWwindow* window = glfwCreateWindow(2160, 2160, "Vector Field Generator", NULL, NULL);
+	GLFWwindow* window = glfwCreateWindow(sizeOfWindow, sizeOfWindow, "Vector Field Generator", NULL, NULL);
 	
 	if (window == NULL) {
 		std::cout << "Failed to create GLFW window" << std::endl;
@@ -43,7 +44,7 @@ int main(void)
 		return -1;
 	}
 
-	glViewport(0, 0, 2160, 2160);
+	glViewport(0, 0, sizeOfWindow, sizeOfWindow);
 	glEnable(GL_PROGRAM_POINT_SIZE);
 
 	unsigned int vao;
@@ -63,7 +64,7 @@ int main(void)
 	while (!glfwWindowShouldClose(window)) {
 		glClearColor(0.0, 0.0, 0.0, 1.0f);
 		glClear(GL_COLOR_BUFFER_BIT);
-		glfwGetCursorPos(window, &currX, &currY);
+		//glfwGetCursorPos(window, &currX, &currY);
 		if(currTime < 100)
 			currTime++;
 		

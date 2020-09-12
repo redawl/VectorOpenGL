@@ -1,5 +1,5 @@
 ﻿  Source.cpp
-C:\Software Stuff\TestingOpenGL\Testing\VectorOpenGL\src\Source.cpp(24,12): warning C4244: 'argument': conversion from 'time_t' to 'unsigned int', possible loss of data
-C:\Software Stuff\TestingOpenGL\Testing\VectorOpenGL\src\Source.cpp(72,27): warning C4244: 'argument': conversion from 'double' to 'GLfloat', possible loss of data
-C:\Software Stuff\TestingOpenGL\Testing\VectorOpenGL\src\Source.cpp(129,48): warning C4390: ';': empty controlled statement found; is this the intent?
-  Testing.vcxproj -> C:\Software Stuff\TestingOpenGL\Testing\VectorOpenGL\Debug\Testing.exe
+C:\Projects\VectorOpenGL\src\Source.cpp(25,12): warning C4244: 'argument': conversion from 'time_t' to 'unsigned int', possible loss of data
+C:\Projects\VectorOpenGL\src\Source.cpp(73,27): warning C4244: 'argument': conversion from 'double' to 'GLfloat', possible loss of data
+C:\Projects\VectorOpenGL\src\Source.cpp(130,48): warning C4390: ';': empty controlled statement found; is this the intent?
+  Testing.vcxproj -> C:\Projects\VectorOpenGL\Debug\Testing.exe
