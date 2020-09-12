@@ -9,6 +9,8 @@ in TIME{
 	float a_time;
 }the_time[];
 uniform float Scale;
+uniform float currX;
+uniform float currY;
 
 void main(){
 	float poop = Scale;
@@ -20,7 +22,8 @@ void main(){
 	scaler[1] = vec4(0, 1 / poop, 0, 0);
 	scaler[2] = vec4(0, 0, 1 / poop, 0);
 	scaler[3] = vec4(0, 0, 0, 1);
-	gl_PointSize = 2.0f;
+
+	gl_PointSize = 4.0f;
 	float x = gl_in[0].gl_Position.x;
 	float y = gl_in[0].gl_Position.y;
 	float r = 1;
@@ -29,7 +32,7 @@ void main(){
 	int index = int(the_time[0].a_time);
 	
 	for(int i = index; i >= 0; i--){
-		gl_Position = scaler * vec4(x, y, 0.0, 1.0);
+		gl_Position = scaler * vec4(x + currX- 1.0f, y + currY + 1.0f, 0.0, 1.0);
 		ColorVec = vec4(r, 0, b, 1.0f);
 		EmitVertex();
 		r *= fade;

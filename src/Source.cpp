@@ -27,7 +27,7 @@ int main(void)
 	glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 3);
 	glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
 
-	GLFWwindow* window = glfwCreateWindow(1080, 1080, "Vector Field Generator", NULL, NULL);
+	GLFWwindow* window = glfwCreateWindow(2160, 2160, "Vector Field Generator", NULL, NULL);
 	
 	if (window == NULL) {
 		std::cout << "Failed to create GLFW window" << std::endl;
@@ -43,7 +43,7 @@ int main(void)
 		return -1;
 	}
 
-	glViewport(0, 0, 1080, 1080);
+	glViewport(0, 0, 2160, 2160);
 	glEnable(GL_PROGRAM_POINT_SIZE);
 
 	unsigned int vao;
@@ -56,14 +56,20 @@ int main(void)
 	int currTime = 0;
 	glfwSetScrollCallback(window, scroll_callback);
 	unsigned int timeLoc = glGetUniformLocation(ourShader.ID, "time");
+	double currX = 0;
+	double currY = 0;
+	unsigned int xLoc = glGetUniformLocation(ourShader.ID, "currX");
+	unsigned int yLoc = glGetUniformLocation(ourShader.ID, "currY");
 	while (!glfwWindowShouldClose(window)) {
 		glClearColor(0.0, 0.0, 0.0, 1.0f);
 		glClear(GL_COLOR_BUFFER_BIT);
-
+		glfwGetCursorPos(window, &currX, &currY);
 		if(currTime < 100)
 			currTime++;
 		
 		glUniform1i(timeLoc, currTime);
+		glUniform1f(xLoc, 0.001f * (float)currX);
+		glUniform1f(yLoc, 0.001 * -(float)currY);
 		processInput(window);
 		vecField.Generate(vertices);
 		
@@ -126,6 +132,6 @@ void key_callback(GLFWwindow* window, int key, int scancode, int action, int mod
 
 void scroll_callback(GLFWwindow* window, double xoffset, double yoffset)
 {
-	y_offset += yoffset;
+	y_offset -= yoffset;
 	std::cout << y_offset << std::endl;
 }
