@@ -1,1 +1,7 @@
 Dependancies
+Debug
+Release
+Testing.sln
+Testing.vcxproj
+Testing.vcxproj.filters
+Testing.vcxproj.user
