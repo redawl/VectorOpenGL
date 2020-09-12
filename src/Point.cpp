@@ -43,13 +43,13 @@ void Point::resetY() {
 void Point::getCurrPos(float& x, float& y, float& time) {
 	float tempX = /*(this->x + this->y);*/cos(4 * ((this->x * this->x) + (this->y * this->y)));
 	float tempY = /*(this->y - this->x);*/((this->y * this->y) - (this->x * this->x));
-	this->x += 0.001f * tempX;
-	if (this->x > 1.0f || this->x < -1.0f) {
+	this->x += 0.005f * tempX;
+	if (this->x > 500.0f || this->x < -500.0f) {
 		resetX();
 	}
 	x = this->x;
-	this->y += 0.001f * tempY;
-	if (this->y > 1.0f || this->y < -1.0f)
+	this->y += 0.005f * tempY;
+	if (this->y > 500.0f || this->y < -500.0f)
 		resetY();
 
 	if (rand() % 110 == 10) {

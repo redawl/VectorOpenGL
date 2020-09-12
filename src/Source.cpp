@@ -5,7 +5,7 @@
 #include "Field.h"
 #include <time.h>
 
-const int numVertices = 100;
+const int numVertices = 600;
 const int sizeOfWindow = 1080;
 void framebuffer_size_callback(GLFWwindow* window, int width, int height);//changes the layout of pixels with the window size
 void processInput(GLFWwindow* window);//checks if the user has hit the escape key, and terminates the window if so

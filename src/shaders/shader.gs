@@ -13,17 +13,17 @@ uniform float currX;
 uniform float currY;
 
 void main(){
-	float poop = Scale;
-	if(poop <= 0){
-		poop = 1;
+	float tempScale = Scale;
+	if(tempScale <= 0){
+		tempScale = 1;
 	}
 	mat4 scaler;
-	scaler[0] = vec4(1 / poop, 0, 0, 0);
-	scaler[1] = vec4(0, 1 / poop, 0, 0);
-	scaler[2] = vec4(0, 0, 1 / poop, 0);
+	scaler[0] = vec4(1 / tempScale, 0, 0, 0);
+	scaler[1] = vec4(0, 1 / tempScale, 0, 0);
+	scaler[2] = vec4(0, 0, 1 / tempScale, 0);
 	scaler[3] = vec4(0, 0, 0, 1);
 
-	gl_PointSize = 4.0f;
+	gl_PointSize = 1.0f;
 	float x = gl_in[0].gl_Position.x;
 	float y = gl_in[0].gl_Position.y;
 	float r = 1;
@@ -37,8 +37,8 @@ void main(){
 		EmitVertex();
 		r *= fade;
 		b *= fade;
-		x -= 0.001f * /*(x + y);*/(cos(4 * ((x*x) + (y*y))));
-		y -= 0.001f * /*(y - x);*/((y*y) - (x*x));
+		x -= 0.005f * /*(x + y);*/(cos(4 * ((x*x) + (y*y))));
+		y -= 0.005f * /*(y - x);*/((y*y) - (x*x));
 	}
 	EndPrimitive();
 }
