@@ -150,13 +150,11 @@
     <ClCompile Include="src\Point.cpp" />
     <ClCompile Include="src\Shader.cpp" />
     <ClCompile Include="src\Source.cpp" />
-    <ClCompile Include="src\stb_image.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="src\Field.h" />
     <ClInclude Include="src\Point.h" />
     <ClInclude Include="src\Shader.h" />
-    <ClInclude Include="src\stb_image.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include="src\shaders\shader.fs" />
