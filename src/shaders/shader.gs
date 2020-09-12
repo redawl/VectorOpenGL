@@ -11,6 +11,7 @@ in TIME{
 uniform float Scale;
 uniform float currX;
 uniform float currY;
+uniform float scalingFactor;
 
 void main(){
 	float tempScale = Scale;
@@ -23,7 +24,7 @@ void main(){
 	scaler[2] = vec4(0, 0, 1 / tempScale, 0);
 	scaler[3] = vec4(0, 0, 0, 1);
 
-	gl_PointSize = 1.0f;
+	gl_PointSize = 5.0f;
 	float x = gl_in[0].gl_Position.x;
 	float y = gl_in[0].gl_Position.y;
 	float r = 1;
@@ -37,8 +38,8 @@ void main(){
 		EmitVertex();
 		r *= fade;
 		b *= fade;
-		x -= 0.005f * /*(x + y);*/(cos(4 * ((x*x) + (y*y))));
-		y -= 0.005f * /*(y - x);*/((y*y) - (x*x));
+		x -= scalingFactor * /*(x + y);*/(cos(4 * ((x*x) + (y*y))));
+		y -= scalingFactor * /*(y - x);*/((y*y) - (x*x));
 	}
 	EndPrimitive();
 }

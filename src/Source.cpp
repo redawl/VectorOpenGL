@@ -3,10 +3,10 @@
 #include <iostream>
 #include "Shader.h"
 #include "Field.h"
+#include "Point.h"
 #include <time.h>
 
-const int numVertices = 600;
-const int sizeOfWindow = 1080;
+const int numVertices = 100;
 void framebuffer_size_callback(GLFWwindow* window, int width, int height);//changes the layout of pixels with the window size
 void processInput(GLFWwindow* window);//checks if the user has hit the escape key, and terminates the window if so
 void initialize(unsigned int& vao, Shader& ourShader, float*& vertices);//initializes all necessary objects
@@ -18,6 +18,9 @@ double y_offset = 0;//current x offset from scroll wheel
 
 int main(void)
 {
+	int sizeOfWindow = 0;
+	std::cout << "Please Enter Resolution: ";
+	std::cin >> sizeOfWindow;
 	srand(time(0));
 	glfwInit();
 	glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 3);
@@ -57,6 +60,8 @@ int main(void)
 	double currY = 0;
 	unsigned int xLoc = glGetUniformLocation(ourShader.ID, "currX");
 	unsigned int yLoc = glGetUniformLocation(ourShader.ID, "currY");
+	unsigned int scalingLoc = glGetUniformLocation(ourShader.ID, "scalingFactor");
+	glUniform1f(scalingLoc, scalingFactor);
 	while (!glfwWindowShouldClose(window)) {
 		glClearColor(0.0, 0.0, 0.0, 1.0f);
 		glClear(GL_COLOR_BUFFER_BIT);
@@ -66,7 +71,8 @@ int main(void)
 		
 		glUniform1i(timeLoc, currTime);
 		glUniform1f(xLoc, 0.001f * (float)currX);
-		glUniform1f(yLoc, 0.001 * -(float)currY);
+		glUniform1f(yLoc, 0.001f * -(float)currY);
+		glUniform1f(scalingLoc, scalingFactor);
 		processInput(window);
 		vecField.Generate(vertices);
 		

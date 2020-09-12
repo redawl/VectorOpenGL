@@ -1,6 +1,9 @@
 #ifndef POINT_H
 #define POINT_H
 #include <iostream>
+#include "glad/glad.h"
+
+const float scalingFactor = 0.001f;
 class Point {
 public:
 	Point(float x, float y);

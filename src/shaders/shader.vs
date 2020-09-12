@@ -8,5 +8,5 @@ out TIME{
 void main()
 {	
 	the_time.a_time = time;
-	gl_Position = vec4(aPos.x, aPos.y, aPos.z, 1.0f);
+	gl_Position = aPos;
 }
