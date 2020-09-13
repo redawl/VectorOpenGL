@@ -1,6 +1,6 @@
 #version 430 core
 layout (location = 0) in vec4 aPos;
-in float time;
+layout (location = 1) in float time;
 out TIME{
 	float a_time;
 }the_time;

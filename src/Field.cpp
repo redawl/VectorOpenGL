@@ -25,7 +25,10 @@ void Field::Generate(float *& vertices) {
 			float x = 0;
 			float y = 0;
 			float time = 0;
-			pointField[i][j].getCurrPos(x, y, time);
+			if (!pointField[i][j].checkIfCooling())
+				pointField[i][j].getCurrPos(x, y, time);
+			else
+				pointField[i][j].CoolDown(x, y, time);
 			vertices[index] = x;
 			index++;
 			vertices[index] = y;

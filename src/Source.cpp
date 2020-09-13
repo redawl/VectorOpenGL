@@ -1,3 +1,8 @@
+/*--------------------------------------------------------------------------------------------------------
+
+Includes
+
+--------------------------------------------------------------------------------------------------------*/
 #include <glad/glad.h>
 #include <GLFW/glfw3.h>
 #include <iostream>
@@ -5,22 +10,46 @@
 #include "Field.h"
 #include "Point.h"
 #include <time.h>
+/*--------------------------------------------------------------------------------------------------------
 
+Constants
+
+--------------------------------------------------------------------------------------------------------*/
 const int numVertices = 100;
-void framebuffer_size_callback(GLFWwindow* window, int width, int height);//changes the layout of pixels with the window size
-void processInput(GLFWwindow* window);//checks if the user has hit the escape key, and terminates the window if so
-void initialize(unsigned int& vao, Shader& ourShader, float*& vertices);//initializes all necessary objects
-void display(unsigned int& vao, Shader& ourShader, int currTime, float* vertices);//call this each loop
-void key_callback(GLFWwindow* window, int key, int scancode, int action, int mods);//used for getting keypresses
-void scroll_callback(GLFWwindow* window, double xoffset, double yoffset);//scrollwheel 
+const float pixelSize = 4.0f;
+/*--------------------------------------------------------------------------------------------------------
+
+Function Declarations
+
+--------------------------------------------------------------------------------------------------------*/
+//changes the layout of pixels with the window size
+void framebuffer_size_callback(GLFWwindow * window, int width, int height);
+//checks if the user has hit the escape key, and terminates the window if so
+void processInput(GLFWwindow* window);
+//initializes all necessary objects
+void initialize(unsigned int& vao, Shader& ourShader, float*& vertices);
+//call this each loop
+void display(unsigned int& vao, Shader& ourShader, float* vertices);
+//scrollwheel
+void scroll_callback(GLFWwindow* window, double xoffset, double yoffset); 
 
 double y_offset = 0;//current x offset from scroll wheel
 
 int main(void)
 {
+/*--------------------------------------------------------------------------------------------------------
+
+Command Line Interface
+
+--------------------------------------------------------------------------------------------------------*/
 	int sizeOfWindow = 0;
 	std::cout << "Please Enter Resolution: ";
 	std::cin >> sizeOfWindow;
+/*--------------------------------------------------------------------------------------------------------
+
+GLFW Window Setup
+
+--------------------------------------------------------------------------------------------------------*/
 	srand(time(0));
 	glfwInit();
 	glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 3);
@@ -36,12 +65,24 @@ int main(void)
 	}
 	glfwMakeContextCurrent(window);
 	glfwSetFramebufferSizeCallback(window, framebuffer_size_callback);
+	glfwSetScrollCallback(window, scroll_callback);
 
 	glfwSwapInterval(1);
+/*--------------------------------------------------------------------------------------------------------
+
+Initialize GLAD
+
+--------------------------------------------------------------------------------------------------------*/
+
 	if (!gladLoadGLLoader((GLADloadproc)glfwGetProcAddress)) {
 		std::cout << "Failed to initialize GLAD" << std::endl;
 		return -1;
 	}
+/*--------------------------------------------------------------------------------------------------------
+
+OpenGL Setup
+
+--------------------------------------------------------------------------------------------------------*/
 
 	glViewport(0, 0, sizeOfWindow, sizeOfWindow);
 	glEnable(GL_PROGRAM_POINT_SIZE);
@@ -52,39 +93,50 @@ int main(void)
 	float* vertices = 0;
 	vecField.Generate(vertices);
 	initialize(vao, ourShader, vertices);
-
-	int currTime = 0;
-	glfwSetScrollCallback(window, scroll_callback);
-	unsigned int timeLoc = glGetUniformLocation(ourShader.ID, "time");
+	
 	double currX = 0;
 	double currY = 0;
 	unsigned int xLoc = glGetUniformLocation(ourShader.ID, "currX");
 	unsigned int yLoc = glGetUniformLocation(ourShader.ID, "currY");
 	unsigned int scalingLoc = glGetUniformLocation(ourShader.ID, "scalingFactor");
-	glUniform1f(scalingLoc, scalingFactor);
+
+/*--------------------------------------------------------------------------------------------------------
+
+Rendering Loop
+
+--------------------------------------------------------------------------------------------------------*/
 	while (!glfwWindowShouldClose(window)) {
 		glClearColor(0.0, 0.0, 0.0, 1.0f);
 		glClear(GL_COLOR_BUFFER_BIT);
 		//glfwGetCursorPos(window, &currX, &currY);
-		if(currTime < 100)
-			currTime++;
-		
-		glUniform1i(timeLoc, currTime);
-		glUniform1f(xLoc, 0.001f * (float)currX);
-		glUniform1f(yLoc, 0.001f * -(float)currY);
+		glUniform1f(xLoc, scalingFactor * (float)currX);
+		glUniform1f(yLoc, scalingFactor * -(float)currY);
 		glUniform1f(scalingLoc, scalingFactor);
+		ourShader.setFloat("pixelSize", pixelSize);
+		
 		processInput(window);
 		vecField.Generate(vertices);
 		
-		display(vao, ourShader, currTime, vertices);
-		//ImGui::ShowDemoWindow();
+		display(vao, ourShader, vertices);
 		glfwSwapBuffers(window);
 		glfwPollEvents();
 	}
+/*--------------------------------------------------------------------------------------------------------
+
+Cleanup
+
+--------------------------------------------------------------------------------------------------------*/
+
 	glfwTerminate();
 	delete[] vertices;
 	return 0;
 }
+/*--------------------------------------------------------------------------------------------------------
+
+Function Implementations
+
+--------------------------------------------------------------------------------------------------------*/
+
 
 void framebuffer_size_callback(GLFWwindow* window, int width, int height) {
 	glViewport(0, 0, width, height);
@@ -118,19 +170,12 @@ void initialize(unsigned int& vao, Shader& ourShader, float*& vertices) {
 	glEnableVertexAttribArray(timePos);
 }
 
-void display(unsigned int& vao, Shader& ourShader, int currTime, float* vertices) {
+void display(unsigned int& vao, Shader& ourShader, float * vertices) {
 	glBindVertexArray(vao);
 	glBufferSubData(GL_ARRAY_BUFFER, 0, 3 * (numVertices * numVertices) * sizeof(float), vertices);
-	ourShader.setInt("currTime", currTime);
 	ourShader.setFloat("Scale", (float)y_offset);
 	ourShader.use();
 	glDrawArrays(GL_POINTS, 0, 2 * (numVertices * numVertices));
-}
-
-void key_callback(GLFWwindow* window, int key, int scancode, int action, int mods)
-{
-	if (key == GLFW_KEY_E && action == GLFW_PRESS);
-		//activate_airship();
 }
 
 void scroll_callback(GLFWwindow* window, double xoffset, double yoffset)

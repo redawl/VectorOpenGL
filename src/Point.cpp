@@ -1,21 +1,5 @@
 #include "Point.h"
 
-Point::Point(float x, float y) {
-	this->x = x;
-	this->y = y;
-	velocityX = 0.0f;
-	velocityY = 0.0f;
-	time = 1;
-}
-
-Point::Point(float x, float y, float velocityX, float velocityY) {
-	this->x = x;
-	this->y = y;
-	this->velocityX = velocityX;
-	this->velocityY = velocityY;
-	time = 1;
-}
-
 Point::Point() {
 	x = ((float)(rand()) / 500.0f) - 1.0f;
 	y = ((float)(rand()) / 500.0f) - 1.0f;
@@ -23,11 +7,7 @@ Point::Point() {
 	velocityX = 0;
 	velocityY = 0;
 	time = 1;
-}
-
-void Point::setVelocity(float velocityX, float velocityY) {
-	this->velocityX = velocityX;
-	this->velocityY = velocityY;
+	isCoolingDown = false;
 }
 
 void Point::resetX() {
@@ -53,8 +33,7 @@ void Point::getCurrPos(float& x, float& y, float& time) {
 		resetY();
 
 	if (rand() % 110 == 10) {
-		resetX();
-		resetY();
+		isCoolingDown = true;
 	}
 
 	time = (float)this->time;
@@ -62,4 +41,26 @@ void Point::getCurrPos(float& x, float& y, float& time) {
 	this->time++;
 
 	y = this->y;
+}
+
+void Point::CoolDown(float &x, float &y, float & time) {
+	time = this->time;
+	if (this->time != 0) {
+		this->time--;
+		x = this->x;
+		y = this->y;
+		time = this->time;
+	}
+	else {
+		resetX();
+		resetY();
+		isCoolingDown = false;
+		this->time++;
+	}
+	x = this->x;
+	y = this->y;
+}
+
+bool Point::checkIfCooling() {
+	return isCoolingDown;
 }

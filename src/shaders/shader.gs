@@ -2,17 +2,24 @@
 layout (points) in;
 layout (points, max_vertices = 100) out;
 out vec4 ColorVec;
-
-uniform int time;
-
 in TIME{
 	float a_time;
 }the_time[];
+/*--------------------------------------------------------------------------------------------------------
+
+Uniforms
+
+--------------------------------------------------------------------------------------------------------*/
 uniform float Scale;
 uniform float currX;
 uniform float currY;
 uniform float scalingFactor;
+uniform float pixelSize;
+/*--------------------------------------------------------------------------------------------------------
 
+Main Function
+
+--------------------------------------------------------------------------------------------------------*/
 void main(){
 	float tempScale = Scale;
 	if(tempScale <= 0){
@@ -24,7 +31,7 @@ void main(){
 	scaler[2] = vec4(0, 0, 1 / tempScale, 0);
 	scaler[3] = vec4(0, 0, 0, 1);
 
-	gl_PointSize = 5.0f;
+	gl_PointSize = pixelSize;
 	float x = gl_in[0].gl_Position.x;
 	float y = gl_in[0].gl_Position.y;
 	float r = 1;
@@ -32,6 +39,11 @@ void main(){
 	float fade = .98;
 	int index = int(the_time[0].a_time);
 	
+/*--------------------------------------------------------------------------------------------------------
+
+Trail Generation
+
+--------------------------------------------------------------------------------------------------------*/
 	for(int i = index; i >= 0; i--){
 		gl_Position = scaler * vec4(x + currX, y + currY, 0.0, 1.0);
 		ColorVec = vec4(r, 0, b, 1.0f);
