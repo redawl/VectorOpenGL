@@ -117,6 +117,8 @@ Rendering Loop
 			glfwGetCursorPos(window, &currX, &currY);
 			glUniform1f(xLoc, scalingFactor * (float)(currX - initialX));
 			glUniform1f(yLoc, scalingFactor * -(float)(currY - initialY));
+			currX -= initialX;
+			currY -= initialY;
 		}
 		else {
 			glfwGetCursorPos(window, &initialX, &initialY);
