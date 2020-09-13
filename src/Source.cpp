@@ -15,7 +15,7 @@ Includes
 Constants
 
 --------------------------------------------------------------------------------------------------------*/
-const int numVertices = 100;
+const int numVertices = 200;
 const float pixelSize = 4.0f;
 /*--------------------------------------------------------------------------------------------------------
 
@@ -33,7 +33,7 @@ void display(unsigned int& vao, Shader& ourShader, float* vertices);
 //scrollwheel
 void scroll_callback(GLFWwindow* window, double xoffset, double yoffset); 
 
-double y_offset = 0;//current x offset from scroll wheel
+double y_offset = 1;//current x offset from scroll wheel
 
 int main(void)
 {
@@ -99,6 +99,9 @@ OpenGL Setup
 	unsigned int xLoc = glGetUniformLocation(ourShader.ID, "currX");
 	unsigned int yLoc = glGetUniformLocation(ourShader.ID, "currY");
 	unsigned int scalingLoc = glGetUniformLocation(ourShader.ID, "scalingFactor");
+	double initialX = 0;
+	double initialY = 0;
+	glfwGetCursorPos(window, &initialX, &initialY);
 
 /*--------------------------------------------------------------------------------------------------------
 
@@ -108,9 +111,9 @@ Rendering Loop
 	while (!glfwWindowShouldClose(window)) {
 		glClearColor(0.0, 0.0, 0.0, 1.0f);
 		glClear(GL_COLOR_BUFFER_BIT);
-		//glfwGetCursorPos(window, &currX, &currY);
-		glUniform1f(xLoc, scalingFactor * (float)currX);
-		glUniform1f(yLoc, scalingFactor * -(float)currY);
+		glfwGetCursorPos(window, &currX, &currY);
+		glUniform1f(xLoc, scalingFactor * (float)(currX - initialX));
+		glUniform1f(yLoc, scalingFactor * -(float)(currY - initialY));
 		glUniform1f(scalingLoc, scalingFactor);
 		ourShader.setFloat("pixelSize", pixelSize);
 		
@@ -175,11 +178,12 @@ void display(unsigned int& vao, Shader& ourShader, float * vertices) {
 	glBufferSubData(GL_ARRAY_BUFFER, 0, 3 * (numVertices * numVertices) * sizeof(float), vertices);
 	ourShader.setFloat("Scale", (float)y_offset);
 	ourShader.use();
-	glDrawArrays(GL_POINTS, 0, 2 * (numVertices * numVertices));
+	glDrawArrays(GL_POINTS, 0, (numVertices * numVertices));
 }
 
 void scroll_callback(GLFWwindow* window, double xoffset, double yoffset)
 {
-	y_offset -= yoffset;
+	if(y_offset - yoffset < 5 && y_offset - yoffset >=1)
+		y_offset -= yoffset;
 	std::cout << y_offset << std::endl;
 }

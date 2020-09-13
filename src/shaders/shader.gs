@@ -22,16 +22,16 @@ Main Function
 --------------------------------------------------------------------------------------------------------*/
 void main(){
 	float tempScale = Scale;
-	if(tempScale <= 0){
+	/*if(tempScale <= 0){
 		tempScale = 1;
-	}
+	}*/
 	mat4 scaler;
 	scaler[0] = vec4(1 / tempScale, 0, 0, 0);
 	scaler[1] = vec4(0, 1 / tempScale, 0, 0);
 	scaler[2] = vec4(0, 0, 1 / tempScale, 0);
 	scaler[3] = vec4(0, 0, 0, 1);
 
-	gl_PointSize = pixelSize;
+	gl_PointSize = pixelSize * (1 / tempScale);
 	float x = gl_in[0].gl_Position.x;
 	float y = gl_in[0].gl_Position.y;
 	float r = 1;
@@ -50,8 +50,8 @@ Trail Generation
 		EmitVertex();
 		r *= fade;
 		b *= fade;
-		x -= scalingFactor * /*(x + y);*/(cos(4 * ((x*x) + (y*y))));
-		y -= scalingFactor * /*(y - x);*/((y*y) - (x*x));
+		x -= scalingFactor * (x + y);//(cos(4 * ((x*x) + (y*y))));
+		y -= scalingFactor * (y - x);//((y*y) - (x*x));
 	}
 	EndPrimitive();
 }
