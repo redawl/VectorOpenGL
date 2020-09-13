@@ -68,6 +68,7 @@ GLFW Window Setup
 	glfwSetScrollCallback(window, scroll_callback);
 
 	glfwSwapInterval(1);
+	glfwSetInputMode(window, GLFW_STICKY_MOUSE_BUTTONS, GLFW_TRUE);
 /*--------------------------------------------------------------------------------------------------------
 
 Initialize GLAD
@@ -101,7 +102,7 @@ OpenGL Setup
 	unsigned int scalingLoc = glGetUniformLocation(ourShader.ID, "scalingFactor");
 	double initialX = 0;
 	double initialY = 0;
-	glfwGetCursorPos(window, &initialX, &initialY);
+	//glfwGetCursorPos(window, &initialX, &initialY);
 
 /*--------------------------------------------------------------------------------------------------------
 
@@ -111,9 +112,18 @@ Rendering Loop
 	while (!glfwWindowShouldClose(window)) {
 		glClearColor(0.0, 0.0, 0.0, 1.0f);
 		glClear(GL_COLOR_BUFFER_BIT);
-		glfwGetCursorPos(window, &currX, &currY);
-		glUniform1f(xLoc, scalingFactor * (float)(currX - initialX));
-		glUniform1f(yLoc, scalingFactor * -(float)(currY - initialY));
+		int mouseState = glfwGetMouseButton(window, GLFW_MOUSE_BUTTON_LEFT);
+		if (mouseState == GLFW_PRESS) {
+			glfwGetCursorPos(window, &currX, &currY);
+			glUniform1f(xLoc, scalingFactor * (float)(currX));
+			glUniform1f(yLoc, scalingFactor * -(float)(currY));
+			currX -= initialX;
+			currY -= initialY;
+		}
+		else {
+			glfwGetCursorPos(window, &initialX, &initialY);
+		}
+		
 		glUniform1f(scalingLoc, scalingFactor);
 		ourShader.setFloat("pixelSize", pixelSize);
 		
