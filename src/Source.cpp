@@ -115,13 +115,13 @@ Rendering Loop
 		int mouseState = glfwGetMouseButton(window, GLFW_MOUSE_BUTTON_LEFT);
 		if (mouseState == GLFW_PRESS) {
 			glfwGetCursorPos(window, &currX, &currY);
-			glUniform1f(xLoc, scalingFactor * (float)(currX));
-			glUniform1f(yLoc, scalingFactor * -(float)(currY));
-			currX -= initialX;
-			currY -= initialY;
+			glUniform1f(xLoc, scalingFactor * (float)(currX - initialX));
+			glUniform1f(yLoc, scalingFactor * -(float)(currY - initialY));
 		}
 		else {
 			glfwGetCursorPos(window, &initialX, &initialY);
+			initialX -= currX;
+			initialY -= currY;
 		}
 		
 		glUniform1f(scalingLoc, scalingFactor);
