@@ -89,7 +89,7 @@ OpenGL Setup
 	glEnable(GL_PROGRAM_POINT_SIZE);
 
 	unsigned int vao;
-	Shader ourShader("src/shaders/shader.vs", "src/shaders/shader.fs", "src/shaders/shader.gs");
+	Shader ourShader("src/VectorShaders/shader.vs", "src/VectorShaders/shader.fs", "src/VectorShaders/shader.gs");
 	Field vecField(numVertices);
 	float* vertices = 0;
 	vecField.Generate(vertices);

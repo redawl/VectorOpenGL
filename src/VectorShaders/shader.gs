@@ -22,9 +22,7 @@ Main Function
 --------------------------------------------------------------------------------------------------------*/
 void main(){
 	float tempScale = 1 / Scale;
-	/*if(tempScale <= 0){
-		tempScale = 1;
-	}*/
+	
 	mat4 scaler;
 	scaler[0] = vec4(tempScale, 0, 0, 0);
 	scaler[1] = vec4(0, tempScale, 0, 0);
@@ -45,13 +43,13 @@ Trail Generation
 
 --------------------------------------------------------------------------------------------------------*/
 	for(int i = index; i >= 0; i--){
-		gl_Position = scaler * vec4(x + (0.5f * currX), y + (0.5f * currY), 0.0, 1.0);
+		gl_Position = scaler * vec4(x + (1.75f * currX * (1 / tempScale)), y + (1.75f * currY * (1 / tempScale)), 0.0, 1.0);
 		ColorVec = vec4(r, 0, b, 1.0f);
 		EmitVertex();
 		r *= fade;
 		b *= fade;
-		x -= scalingFactor * /*(x + y);*/(cos(4 * ((x*x) + (y*y))));
-		y -= scalingFactor * /*(y - x);*/((y*y) - (x*x));
+		x -= scalingFactor * (x + y);//(cos(4 * ((x*x) + (y*y))));
+		y -= scalingFactor * (y - x);//((y*y) - (x*x));
 	}
 	EndPrimitive();
 }
