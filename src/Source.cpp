@@ -102,7 +102,6 @@ OpenGL Setup
 	unsigned int scalingLoc = glGetUniformLocation(ourShader.ID, "scalingFactor");
 	double initialX = 0;
 	double initialY = 0;
-	//glfwGetCursorPos(window, &initialX, &initialY);
 
 /*--------------------------------------------------------------------------------------------------------
 
