@@ -91,6 +91,7 @@ Initialize ImGui context
 	ImGuiIO& io = ImGui::GetIO();
 	ImGui_ImplGlfw_InitForOpenGL(window, true);
 	ImGui_ImplOpenGL3_Init("#version 430");
+	ImVec2 windowSize = ImVec2(sizeOfWindow / 2, sizeOfWindow / 20);
 /*--------------------------------------------------------------------------------------------------------
 
 OpenGL Setup
@@ -114,6 +115,8 @@ OpenGL Setup
 	unsigned int scalingLoc = glGetUniformLocation(ourShader.ID, "scalingFactor");
 	double initialX = 0;
 	double initialY = 0;
+	char* function = new char[200];
+	strcpy(function, "Insert Function here");
 
 /*--------------------------------------------------------------------------------------------------------
 
@@ -136,22 +139,27 @@ Rendering Loop
 			initialX -= currX;
 			initialY -= currY;
 		}
+		
+		glUniform1f(scalingLoc, scalingFactor);
+		ourShader.setFloat("pixelSize", pixelSize);
+
+		processInput(window);
+		vecField.Generate(vertices);
+		display(vao, ourShader, vertices);
 
 		//Imgui Stuff
 		ImGui_ImplOpenGL3_NewFrame();
 		ImGui_ImplGlfw_NewFrame();
 		
 		ImGui::NewFrame();
-		ImGui::Text("Hello, world!");
+		ImGui::Begin("Enter Function");
+		ImGui::SetWindowSize(windowSize);
+		ImGui::SetWindowFontScale(2);
+		ImGui::InputText("", function, 200);
+		ImGui::End();
 		ImGui::Render();
 		ImGui_ImplOpenGL3_RenderDrawData(ImGui::GetDrawData());
 		
-		glUniform1f(scalingLoc, scalingFactor);
-		ourShader.setFloat("pixelSize", pixelSize);
-		
-		processInput(window);
-		vecField.Generate(vertices);
-		display(vao, ourShader, vertices);
 		glfwSwapBuffers(window);
 		glfwPollEvents();
 	}
