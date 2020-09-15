@@ -10,6 +10,9 @@ Includes
 #include "Field.h"
 #include "Point.h"
 #include <time.h>
+#include "Imgui/imgui.h"
+#include "Imgui/imgui_impl_glfw.h"
+#include "Imgui/imgui_impl_opengl3.h"
 /*--------------------------------------------------------------------------------------------------------
 
 Constants
@@ -81,6 +84,15 @@ Initialize GLAD
 	}
 /*--------------------------------------------------------------------------------------------------------
 
+Initialize ImGui context
+
+--------------------------------------------------------------------------------------------------------*/
+	ImGui::CreateContext();
+	ImGuiIO& io = ImGui::GetIO();
+	ImGui_ImplGlfw_InitForOpenGL(window, true);
+	ImGui_ImplOpenGL3_Init("#version 430");
+/*--------------------------------------------------------------------------------------------------------
+
 OpenGL Setup
 
 --------------------------------------------------------------------------------------------------------*/
@@ -124,13 +136,21 @@ Rendering Loop
 			initialX -= currX;
 			initialY -= currY;
 		}
+
+		//Imgui Stuff
+		ImGui_ImplOpenGL3_NewFrame();
+		ImGui_ImplGlfw_NewFrame();
+		
+		ImGui::NewFrame();
+		ImGui::Text("Hello, world!");
+		ImGui::Render();
+		ImGui_ImplOpenGL3_RenderDrawData(ImGui::GetDrawData());
 		
 		glUniform1f(scalingLoc, scalingFactor);
 		ourShader.setFloat("pixelSize", pixelSize);
 		
 		processInput(window);
 		vecField.Generate(vertices);
-		
 		display(vao, ourShader, vertices);
 		glfwSwapBuffers(window);
 		glfwPollEvents();
@@ -140,7 +160,9 @@ Rendering Loop
 Cleanup
 
 --------------------------------------------------------------------------------------------------------*/
-
+	ImGui_ImplOpenGL3_Shutdown();
+	ImGui_ImplGlfw_Shutdown();
+	ImGui::DestroyContext();
 	glfwTerminate();
 	delete[] vertices;
 	return 0;
