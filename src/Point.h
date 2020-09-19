@@ -1,6 +1,7 @@
 #ifndef POINT_H
 #define POINT_H
 #include <iostream>
+#include <fstream>
 #include "glad/glad.h"
 
 const float scalingFactor = 0.001f;

@@ -6,6 +6,7 @@ Includes
 #include <glad/glad.h>
 #include <GLFW/glfw3.h>
 #include <iostream>
+#include <fstream>
 #include "Shader.h"
 #include "Field.h"
 #include "Point.h"
@@ -102,21 +103,20 @@ OpenGL Setup
 	glEnable(GL_PROGRAM_POINT_SIZE);
 
 	unsigned int vao;
-	Shader ourShader("src/VectorShaders/shader.vs", "src/VectorShaders/shader.fs", "src/VectorShaders/shader.gs");
+	Shader  * ourShader = new Shader("src/VectorShaders/shader.vs", "src/VectorShaders/shader.fs", "src/VectorShaders/shader.gs");
 	Field vecField(numVertices);
 	float* vertices = 0;
 	vecField.Generate(vertices);
-	initialize(vao, ourShader, vertices);
+	initialize(vao, *ourShader, vertices);
 	
 	double currX = 0;
 	double currY = 0;
-	unsigned int xLoc = glGetUniformLocation(ourShader.ID, "currX");
-	unsigned int yLoc = glGetUniformLocation(ourShader.ID, "currY");
-	unsigned int scalingLoc = glGetUniformLocation(ourShader.ID, "scalingFactor");
+	unsigned int xLoc = glGetUniformLocation(ourShader->ID, "currX");
+	unsigned int yLoc = glGetUniformLocation(ourShader->ID, "currY");
+	unsigned int scalingLoc = glGetUniformLocation(ourShader->ID, "scalingFactor");
 	double initialX = 0;
 	double initialY = 0;
-	char* function = new char[200];
-	strcpy(function, "Insert Function here");
+	float boolean = 1;
 
 /*--------------------------------------------------------------------------------------------------------
 
@@ -141,11 +141,11 @@ Rendering Loop
 		}
 		
 		glUniform1f(scalingLoc, scalingFactor);
-		ourShader.setFloat("pixelSize", pixelSize);
+		ourShader->setFloat("pixelSize", pixelSize);
 
 		processInput(window);
 		vecField.Generate(vertices);
-		display(vao, ourShader, vertices);
+		display(vao, *ourShader, vertices);
 
 		//Imgui Stuff
 		ImGui_ImplOpenGL3_NewFrame();
@@ -154,11 +154,45 @@ Rendering Loop
 		ImGui::NewFrame();
 		ImGui::Begin("Enter Function");
 		ImGui::SetWindowSize(windowSize);
-		ImGui::SetWindowFontScale(2);
-		ImGui::InputText("", function, 200);
+		ImGui::SetWindowFontScale(sizeOfWindow / 1080);
+		ImGui::InputFloat("", &boolean, 0, 0);
 		ImGui::End();
 		ImGui::Render();
 		ImGui_ImplOpenGL3_RenderDrawData(ImGui::GetDrawData());
+
+		if (boolean == 0) {
+			//io
+			std::ifstream in;
+			in.open("src/VectorShaders/shader.gs");
+
+			std::ofstream out;
+			out.open("temp.txt");
+			char temp[200];
+			for (int i = 0; i < 50; i++) {
+				in >> temp;
+				out << temp;
+			}
+
+			in >> temp;
+			out << "		x -= scalingFactor * (cos(4 * ((x*x) + (y*y))));";
+			in >> temp;
+			out << "		y -= scalingFactor * ((y*y) - (x*x));";
+			
+			for (int i = 0; i < 3; i++) {
+				in >> temp;
+				out << temp;
+			}
+
+			remove("src/VectorShaders/shader.gs");
+			rename("temp.txt", "src/VectorShaders/shader.gs");
+
+			delete ourShader;
+			ourShader = new Shader("src/VectorShaders/shader.vs", "src/VectorShaders/shader.fs", "src/VectorShaders/shader.gs");
+			xLoc = glGetUniformLocation(ourShader->ID, "currX");
+			yLoc = glGetUniformLocation(ourShader->ID, "currY");
+			scalingLoc = glGetUniformLocation(ourShader->ID, "scalingFactor");
+			boolean = 1;
+		}
 		
 		glfwSwapBuffers(window);
 		glfwPollEvents();
@@ -173,6 +207,7 @@ Cleanup
 	ImGui::DestroyContext();
 	glfwTerminate();
 	delete[] vertices;
+	delete ourShader;
 	return 0;
 }
 /*--------------------------------------------------------------------------------------------------------
