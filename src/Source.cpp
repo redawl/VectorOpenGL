@@ -45,14 +45,6 @@ int main(void)
 {
 /*--------------------------------------------------------------------------------------------------------
 
-Command Line Interface
-
---------------------------------------------------------------------------------------------------------*/
-	int sizeOfWindow = 0;
-	std::cout << "Please Enter Resolution: ";
-	std::cin >> sizeOfWindow;
-/*--------------------------------------------------------------------------------------------------------
-
 GLFW Window Setup
 
 --------------------------------------------------------------------------------------------------------*/
@@ -61,6 +53,7 @@ GLFW Window Setup
 	glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 3);
 	glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 3);
 	glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
+	int sizeOfWindow = glfwGetVideoMode(glfwGetPrimaryMonitor())->height;
 
 	GLFWwindow* window = glfwCreateWindow(sizeOfWindow, sizeOfWindow, "Vector Field Generator", NULL, NULL);
 	
