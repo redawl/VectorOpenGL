@@ -37,6 +37,8 @@ void display(unsigned int& vao, Shader& ourShader, float* vertices);
 //scrollwheel
 void scroll_callback(GLFWwindow* window, double xoffset, double yoffset); 
 
+void set_equations(char * changeX, char * changeY);
+
 double y_offset = 1;//current x offset from scroll wheel
 
 int main(void)
@@ -103,6 +105,13 @@ OpenGL Setup
 	glEnable(GL_PROGRAM_POINT_SIZE);
 
 	unsigned int vao;
+	char* changeX = new char[200];
+	strcpy(changeX, "(x + y)");
+	char* changeY = new char[200];
+	strcpy(changeY, "(y - x)");
+	set_equations(changeX, changeY);
+	delete[] changeX;
+	delete[] changeY;
 	Shader  * ourShader = new Shader("src/VectorShaders/shader.vs", "src/VectorShaders/shader.fs", "src/VectorShaders/shader.gs");
 	Field vecField(numVertices);
 	float* vertices = 0;
@@ -117,6 +126,12 @@ OpenGL Setup
 	double initialX = 0;
 	double initialY = 0;
 	float boolean = 1;
+
+	changeX = new char[200];
+	changeY = new char[200];
+
+	strcpy(changeX, "(cos(4 * ((x*x) + (y*y))))");
+	strcpy(changeY, "((y*y) - (x*x))");
 
 /*--------------------------------------------------------------------------------------------------------
 
@@ -161,35 +176,7 @@ Rendering Loop
 		ImGui_ImplOpenGL3_RenderDrawData(ImGui::GetDrawData());
 
 		if (boolean == 0) {
-			//io
-			std::ifstream in;
-			in.open("src/VectorShaders/shader.gs");
-
-			std::ofstream out;
-			out.open("temp.txt");
-			char temp[200];
-			for (int i = 0; i < 50; i++) {
-				in.getline(temp, 200);
-				out << temp;
-				out << '\n';
-			}
-
-			in.getline(temp, 200);
-			out << "		x -= scalingFactor * (cos(4 * ((x*x) + (y*y))));\n";
-			in.getline(temp, 200);
-			out << "		y -= scalingFactor * ((y*y) - (x*x));\n";
-			
-			for (int i = 0; i < 3; i++) {
-				in.getline(temp, 200);
-				out << temp;
-				out << '\n';
-			}
-
-			in.close();
-			out.close();
-
-			remove("src/VectorShaders/shader.gs");
-			rename("temp.txt", "src/VectorShaders/shader.gs");
+			set_equations(changeX, changeY);
 
 			delete ourShader;
 			ourShader = new Shader("src/VectorShaders/shader.vs", "src/VectorShaders/shader.fs", "src/VectorShaders/shader.gs");
@@ -267,4 +254,37 @@ void scroll_callback(GLFWwindow* window, double xoffset, double yoffset)
 	if(y_offset - yoffset < 5 && y_offset - yoffset >=1)
 		y_offset -= yoffset;
 	std::cout << y_offset << std::endl;
+}
+
+void set_equations(char* changeX, char* changeY) {
+	//io
+	std::ifstream in;
+	in.open("src/VectorShaders/shader.gs");
+
+	std::ofstream out;
+	out.open("temp.txt");
+	char temp[200];
+	for (int i = 0; i < 50; i++) {
+		in.getline(temp, 200);
+		out << temp;
+		out << '\n';
+	}
+
+	in.getline(temp, 200);
+	out << "		x -= scalingFactor * " << changeX << ";\n";
+	in.getline(temp, 200);
+	out << "		y -= scalingFactor * " << changeY << ";\n";
+
+	for (int i = 0; i < 3; i++) {
+		in.getline(temp, 200);
+		out << temp;
+		out << '\n';
+	}
+
+	in.close();
+	out.close();
+
+	remove("src/VectorShaders/shader.gs");
+	rename("temp.txt", "src/VectorShaders/shader.gs");
+
 }
