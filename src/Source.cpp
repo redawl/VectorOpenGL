@@ -169,19 +169,24 @@ Rendering Loop
 			out.open("temp.txt");
 			char temp[200];
 			for (int i = 0; i < 50; i++) {
-				in >> temp;
+				in.getline(temp, 200);
 				out << temp;
+				out << '\n';
 			}
 
-			in >> temp;
-			out << "		x -= scalingFactor * (cos(4 * ((x*x) + (y*y))));";
-			in >> temp;
-			out << "		y -= scalingFactor * ((y*y) - (x*x));";
+			in.getline(temp, 200);
+			out << "		x -= scalingFactor * (cos(4 * ((x*x) + (y*y))));\n";
+			in.getline(temp, 200);
+			out << "		y -= scalingFactor * ((y*y) - (x*x));\n";
 			
 			for (int i = 0; i < 3; i++) {
-				in >> temp;
+				in.getline(temp, 200);
 				out << temp;
+				out << '\n';
 			}
+
+			in.close();
+			out.close();
 
 			remove("src/VectorShaders/shader.gs");
 			rename("temp.txt", "src/VectorShaders/shader.gs");
