@@ -14,13 +14,12 @@ Includes
 #include "Imgui/imgui.h"
 #include "Imgui/imgui_impl_glfw.h"
 #include "Imgui/imgui_impl_opengl3.h"
-#include "exprtk.hpp"
 /*--------------------------------------------------------------------------------------------------------
 
 Constants
 
 --------------------------------------------------------------------------------------------------------*/
-const int numVertices = 200;
+const int numVertices = 50;
 const float pixelSize = 4.0f;
 /*--------------------------------------------------------------------------------------------------------
 
@@ -38,7 +37,7 @@ void display(unsigned int& vao, Shader& ourShader, float* vertices);
 //scrollwheel
 void scroll_callback(GLFWwindow* window, double xoffset, double yoffset); 
 
-void set_equations(char * changeX, char * changeY);
+void set_equations(const char * changeX, const char * changeY);
 
 double y_offset = 1;//current x offset from scroll wheel
 
@@ -99,15 +98,12 @@ OpenGL Setup
 	glEnable(GL_PROGRAM_POINT_SIZE);
 
 	unsigned int vao;
-	char* changeX = new char[200];
-	strcpy(changeX, "(x + y)");
-	char* changeY = new char[200];
-	strcpy(changeY, "(y - x)");
-	set_equations(changeX, changeY);
-	delete[] changeX;
-	delete[] changeY;
+	std::string changeX = "(x + y)";
+	std::string changeY = "(y - x)";
+	set_equations(changeX.c_str(), changeY.c_str());
 	Shader  * ourShader = new Shader("src/VectorShaders/shader.vs", "src/VectorShaders/shader.fs", "src/VectorShaders/shader.gs");
 	Field vecField(numVertices);
+	vecField.SetEquations(changeX, changeY);
 	float* vertices = 0;
 	vecField.Generate(vertices);
 	initialize(vao, *ourShader, vertices);
@@ -121,15 +117,8 @@ OpenGL Setup
 	double initialY = 0;
 	float boolean = 1;
 
-	changeX = new char[200];
-	changeY = new char[200];
-
-	strcpy(changeX, "(cos(4 * ((x*x) + (y*y))))");
-	strcpy(changeY, "((y*y) - (x*x))");
-	exprtk::symbol_table<float> symbol_table;
-	exprtk::expression<float> expressionX;
-	exprtk::expression<float> expressionY;
-	exprtk::parser<float> parser;
+	changeX = "(cos(4 * ((x*x) + (y*y))))";
+	changeY = "((y*y) - (x*x))";
 
 /*--------------------------------------------------------------------------------------------------------
 
@@ -174,7 +163,8 @@ Rendering Loop
 		ImGui_ImplOpenGL3_RenderDrawData(ImGui::GetDrawData());
 
 		if (boolean == 0) {
-			set_equations(changeX, changeY);
+			set_equations(changeX.c_str(), changeY.c_str());
+			vecField.SetEquations(changeX, changeY);
 
 			delete ourShader;
 			ourShader = new Shader("src/VectorShaders/shader.vs", "src/VectorShaders/shader.fs", "src/VectorShaders/shader.gs");
@@ -254,7 +244,7 @@ void scroll_callback(GLFWwindow* window, double xoffset, double yoffset)
 	std::cout << y_offset << std::endl;
 }
 
-void set_equations(char* changeX, char* changeY) {
+void set_equations(const char* changeX, const char* changeY) {
 	//io
 	std::ifstream in;
 	in.open("src/VectorShaders/shader.gs");

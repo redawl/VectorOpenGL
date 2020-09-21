@@ -3,6 +3,7 @@
 #include <iostream>
 #include <fstream>
 #include "glad/glad.h"
+#include "exprtk.hpp"
 
 const float scalingFactor = 0.001f;
 class Point {
@@ -14,6 +15,7 @@ public:
 	bool checkIfCooling();
 	void resetX();
 	void resetY();
+	void setEquations(std::string x, std::string y);
 private:
 	float x;
 	float y;
@@ -21,5 +23,11 @@ private:
 	float velocityY;
 	int time;
 	bool isCoolingDown;
+	std::string equationX;
+	std::string equationY;
+	exprtk::symbol_table<float> symbol_table;
+	exprtk::expression<float> expressionX;
+	exprtk::expression<float> expressionY;
+	exprtk::parser<float> parser;
 };
 #endif

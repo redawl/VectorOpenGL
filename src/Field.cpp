@@ -38,3 +38,13 @@ void Field::Generate(float *& vertices) {
 		}
 	}
 }
+
+void Field::SetEquations(std::string x, std::string y) {
+	equationX = x;
+	equationY = y;
+	for (int i = 0; i < fieldSize; i++) {
+		for (int j = 0; j < fieldSize; j++) {
+			pointField[i][j].setEquations(x, y);
+		}
+	}
+}

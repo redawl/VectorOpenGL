@@ -8,6 +8,11 @@ Point::Point() {
 	velocityY = 0;
 	time = 1;
 	isCoolingDown = false;
+
+	symbol_table.add_variable("x", x);
+	symbol_table.add_variable("y", y);
+	expressionX.register_symbol_table(symbol_table);
+	expressionY.register_symbol_table(symbol_table);
 }
 
 void Point::resetX() {
@@ -21,8 +26,8 @@ void Point::resetY() {
 }
 
 void Point::getCurrPos(float& x, float& y, float& time) {
-	float tempX = (this->x + this->y);//cos(4 * ((this->x * this->x) + (this->y * this->y)));
-	float tempY = (this->y - this->x);//((this->y * this->y) - (this->x * this->x));
+	float tempX = expressionX.value();
+	float tempY = expressionY.value();
 	this->x += scalingFactor * tempX;
 	if (this->x > 10.0f || this->x < -10.0f) {
 		resetX();
@@ -63,4 +68,11 @@ void Point::CoolDown(float &x, float &y, float & time) {
 
 bool Point::checkIfCooling() {
 	return isCoolingDown;
+}
+
+void Point::setEquations(std::string x, std::string y) {
+	equationX = x;
+	equationY = y;
+	parser.compile(equationX, expressionX);
+	parser.compile(equationY, expressionY);
 }
