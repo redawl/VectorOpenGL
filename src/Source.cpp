@@ -14,6 +14,7 @@ Includes
 #include "Imgui/imgui.h"
 #include "Imgui/imgui_impl_glfw.h"
 #include "Imgui/imgui_impl_opengl3.h"
+#include "exprtk.hpp"
 /*--------------------------------------------------------------------------------------------------------
 
 Constants
@@ -125,6 +126,10 @@ OpenGL Setup
 
 	strcpy(changeX, "(cos(4 * ((x*x) + (y*y))))");
 	strcpy(changeY, "((y*y) - (x*x))");
+	exprtk::symbol_table<float> symbol_table;
+	exprtk::expression<float> expressionX;
+	exprtk::expression<float> expressionY;
+	exprtk::parser<float> parser;
 
 /*--------------------------------------------------------------------------------------------------------
 
