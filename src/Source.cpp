@@ -87,7 +87,7 @@ Initialize ImGui context
 	ImGuiIO& io = ImGui::GetIO();
 	ImGui_ImplGlfw_InitForOpenGL(window, true);
 	ImGui_ImplOpenGL3_Init("#version 430");
-	ImVec2 windowSize = ImVec2(sizeOfWindow / 2, sizeOfWindow / 14);
+	ImVec2 windowSize = ImVec2(sizeOfWindow / 2, (sizeOfWindow / 20) * 2);
 /*--------------------------------------------------------------------------------------------------------
 
 OpenGL Setup
@@ -119,6 +119,11 @@ OpenGL Setup
 
 	changeX = "(cos(4 * ((x*x) + (y*y))))";
 	changeY = "((y*y) - (x*x))";
+
+	char* dx = new char[200];
+	char* dy = new char[200];
+	strcpy(dx, "");
+	strcpy(dy, "");
 
 /*--------------------------------------------------------------------------------------------------------
 
@@ -157,6 +162,8 @@ Rendering Loop
 		ImGui::Begin("Enter Function");
 		ImGui::SetWindowSize(windowSize);
 		ImGui::SetWindowFontScale(sizeOfWindow / 1080);
+		ImGui::InputText("dx", dx, 200);
+		ImGui::InputText("dy", dy, 200);
 		if (ImGui::Button("Save"))
 			boolean = 0;
 		ImGui::End();
@@ -164,6 +171,8 @@ Rendering Loop
 		ImGui_ImplOpenGL3_RenderDrawData(ImGui::GetDrawData());
 
 		if (boolean == 0) {
+			changeX = dx;
+			changeY = dy;
 			set_equations(changeX.c_str(), changeY.c_str());
 			vecField.SetEquations(changeX, changeY);
 
@@ -189,6 +198,8 @@ Cleanup
 	glfwTerminate();
 	delete[] vertices;
 	delete ourShader;
+	delete[] dx;
+	delete[] dy;
 	return 0;
 }
 /*--------------------------------------------------------------------------------------------------------

@@ -34,7 +34,7 @@ void main(){
 	float y = gl_in[0].gl_Position.y;
 	float r = 1;
 	float b = 1;
-	float fade = .975;
+	float fade = .98;
 	int index = int(the_time[0].a_time);
 	
 /*--------------------------------------------------------------------------------------------------------
@@ -48,8 +48,8 @@ Trail Generation
 		EmitVertex();
 		r *= fade;
 		b *= fade;
-		x -= scalingFactor * (x + y);
-		y -= scalingFactor * (y - x);
+		x -= scalingFactor * 2 * cos(x);
+		y -= scalingFactor * 2 / sin(y);
 	}
 	EndPrimitive();
 }
