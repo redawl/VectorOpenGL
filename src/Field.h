@@ -5,14 +5,17 @@
 
 class Field {
 public:
-	Field(int size);
+	Field(int size, std::string x, std::string y);
 	~Field();
 	void Generate(float *& vertices);
 	void SetEquations(std::string x, std::string y);
+	void SetPointPos(Point & a_point, float & time);
 private:
 	Point ** pointField;
-	std::string equationX;
-	std::string equationY;
+	exprtk::expression<float> expressionX;
+	exprtk::expression<float> expressionY;
+	float x;
+	float y;
 	int fieldSize;
 };
 #endif

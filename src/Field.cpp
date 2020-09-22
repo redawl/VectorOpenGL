@@ -1,11 +1,14 @@
 #include "Field.h"
 
-Field::Field(int size) {
+Field::Field(int size, std::string x, std::string y) {
 	pointField = new Point*[size];
 	for (int i = 0; i < size; i++) {
 		pointField[i] = new Point[size];
 	}
 	fieldSize = size;
+	this->x = 0;
+	this->y = 0;
+	SetEquations(x, y);
 }
 
 Field::~Field() {
@@ -21,12 +24,9 @@ void Field::Generate(float *& vertices) {
 	int index = 0;
 	for (int i = 0; i < fieldSize; i++) {
 		for (int j = 0; j < fieldSize; j++) {
-			
-			float x = 0;
-			float y = 0;
 			float time = 0;
 			if (!pointField[i][j].checkIfCooling())
-				pointField[i][j].getCurrPos(x, y, time);
+				SetPointPos(pointField[i][j], time);
 			else
 				pointField[i][j].CoolDown(x, y, time);
 			vertices[index] = x;
@@ -40,11 +40,22 @@ void Field::Generate(float *& vertices) {
 }
 
 void Field::SetEquations(std::string x, std::string y) {
-	equationX = x;
-	equationY = y;
-	for (int i = 0; i < fieldSize; i++) {
-		for (int j = 0; j < fieldSize; j++) {
-			pointField[i][j].setEquations(x, y);
-		}
-	}
+	exprtk::symbol_table<float> symbol_table;
+	symbol_table.add_variable("x", this->x);
+	symbol_table.add_variable("y", this->y);
+	expressionX.register_symbol_table(symbol_table);
+	expressionY.register_symbol_table(symbol_table);
+	exprtk::parser<float> parser;
+	parser.compile(x, expressionX);
+	parser.compile(y, expressionY);
+}
+
+void Field::SetPointPos(Point& a_point, float & time) {
+	a_point.getCurrPos(x, y, time);
+	float tempX = expressionX.value();
+	float tempY = expressionY.value();
+	
+	a_point.setCurrPos(tempX, tempY, time);
+	x += scalingFactor * tempX;
+	y += scalingFactor * tempY;
 }

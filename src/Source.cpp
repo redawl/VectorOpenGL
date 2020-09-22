@@ -19,7 +19,7 @@ Includes
 Constants
 
 --------------------------------------------------------------------------------------------------------*/
-const int numVertices = 50;
+const int numVertices = 200;
 const float pixelSize = 4.0f;
 /*--------------------------------------------------------------------------------------------------------
 
@@ -87,7 +87,7 @@ Initialize ImGui context
 	ImGuiIO& io = ImGui::GetIO();
 	ImGui_ImplGlfw_InitForOpenGL(window, true);
 	ImGui_ImplOpenGL3_Init("#version 430");
-	ImVec2 windowSize = ImVec2(sizeOfWindow / 2, sizeOfWindow / 20);
+	ImVec2 windowSize = ImVec2(sizeOfWindow / 2, sizeOfWindow / 14);
 /*--------------------------------------------------------------------------------------------------------
 
 OpenGL Setup
@@ -102,7 +102,7 @@ OpenGL Setup
 	std::string changeY = "(y - x)";
 	set_equations(changeX.c_str(), changeY.c_str());
 	Shader  * ourShader = new Shader("src/VectorShaders/shader.vs", "src/VectorShaders/shader.fs", "src/VectorShaders/shader.gs");
-	Field vecField(numVertices);
+	Field vecField(numVertices, changeX.c_str(), changeY.c_str());
 	vecField.SetEquations(changeX, changeY);
 	float* vertices = 0;
 	vecField.Generate(vertices);
@@ -157,7 +157,8 @@ Rendering Loop
 		ImGui::Begin("Enter Function");
 		ImGui::SetWindowSize(windowSize);
 		ImGui::SetWindowFontScale(sizeOfWindow / 1080);
-		ImGui::InputFloat("", &boolean, 0, 0);
+		if (ImGui::Button("Save"))
+			boolean = 0;
 		ImGui::End();
 		ImGui::Render();
 		ImGui_ImplOpenGL3_RenderDrawData(ImGui::GetDrawData());

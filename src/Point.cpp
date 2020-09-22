@@ -8,11 +8,6 @@ Point::Point() {
 	velocityY = 0;
 	time = 1;
 	isCoolingDown = false;
-
-	symbol_table.add_variable("x", x);
-	symbol_table.add_variable("y", y);
-	expressionX.register_symbol_table(symbol_table);
-	expressionY.register_symbol_table(symbol_table);
 }
 
 void Point::resetX() {
@@ -26,16 +21,8 @@ void Point::resetY() {
 }
 
 void Point::getCurrPos(float& x, float& y, float& time) {
-	float tempX = expressionX.value();
-	float tempY = expressionY.value();
-	this->x += scalingFactor * tempX;
-	if (this->x > 10.0f || this->x < -10.0f) {
-		resetX();
-	}
 	x = this->x;
-	this->y += scalingFactor * tempY;
-	if (this->y > 10.0f || this->y < -10.0f)
-		resetY();
+	y = this->y;
 
 	if (rand() % 110 == 10) {
 		isCoolingDown = true;
@@ -44,8 +31,19 @@ void Point::getCurrPos(float& x, float& y, float& time) {
 	time = (float)this->time;
 	
 	this->time++;
+}
 
-	y = this->y;
+void Point::setCurrPos(float x, float y, float & time) {
+	this->x += scalingFactor * x;
+	if (this->x > 10.0f || this->x < -10.0f) {
+		resetX();
+	}
+	this->y += scalingFactor * y;
+	if (this->y > 10.0f || this->y < -10.0f) {
+		resetY();
+	}
+
+	time = this->time;
 }
 
 void Point::CoolDown(float &x, float &y, float & time) {
@@ -68,11 +66,4 @@ void Point::CoolDown(float &x, float &y, float & time) {
 
 bool Point::checkIfCooling() {
 	return isCoolingDown;
-}
-
-void Point::setEquations(std::string x, std::string y) {
-	equationX = x;
-	equationY = y;
-	parser.compile(equationX, expressionX);
-	parser.compile(equationY, expressionY);
 }

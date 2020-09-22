@@ -34,7 +34,7 @@ void main(){
 	float y = gl_in[0].gl_Position.y;
 	float r = 1;
 	float b = 1;
-	float fade = .98;
+	float fade = .975;
 	int index = int(the_time[0].a_time);
 	
 /*--------------------------------------------------------------------------------------------------------
