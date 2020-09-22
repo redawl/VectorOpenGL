@@ -20,7 +20,7 @@ Constants
 
 --------------------------------------------------------------------------------------------------------*/
 const int numVertices = 200;
-const float pixelSize = 4.0f;
+const float pixelSize = 2.0f;
 /*--------------------------------------------------------------------------------------------------------
 
 Function Declarations
@@ -39,7 +39,7 @@ void scroll_callback(GLFWwindow* window, double xoffset, double yoffset);
 
 void set_equations(const char * changeX, const char * changeY);
 
-double y_offset = 1;//current x offset from scroll wheel
+double y_offset = 1;//current y offset from scroll wheel
 
 int main(void)
 {
@@ -166,6 +166,8 @@ Rendering Loop
 		ImGui::InputText("dy", dy, 200);
 		if (ImGui::Button("Save"))
 			boolean = 0;
+		ImGui::End();
+		ImGui::Begin("Options");
 		ImGui::End();
 		ImGui::Render();
 		ImGui_ImplOpenGL3_RenderDrawData(ImGui::GetDrawData());
