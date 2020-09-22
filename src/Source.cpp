@@ -122,8 +122,8 @@ OpenGL Setup
 
 	char* dx = new char[200];
 	char* dy = new char[200];
-	strcpy(dx, "");
-	strcpy(dy, "");
+	strcpy(dx, "x + y");
+	strcpy(dy, "y - x");
 
 /*--------------------------------------------------------------------------------------------------------
 
@@ -159,7 +159,7 @@ Rendering Loop
 		ImGui_ImplGlfw_NewFrame();
 		
 		ImGui::NewFrame();
-		ImGui::Begin("Enter Function");
+		ImGui::Begin("Enter Functions (ESC to Close)");
 		ImGui::SetWindowSize(windowSize);
 		ImGui::SetWindowFontScale(sizeOfWindow / 1080);
 		ImGui::InputText("dx", dx, 200);
@@ -271,9 +271,9 @@ void set_equations(const char* changeX, const char* changeY) {
 	}
 
 	in.getline(temp, 200);
-	out << "		x -= scalingFactor * " << changeX << ";\n";
+	out << "		x -= scalingFactor * (" << changeX << ");\n";
 	in.getline(temp, 200);
-	out << "		y -= scalingFactor * " << changeY << ";\n";
+	out << "		y -= scalingFactor * (" << changeY << ");\n";
 
 	for (int i = 0; i < 3; i++) {
 		in.getline(temp, 200);
