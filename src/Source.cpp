@@ -19,7 +19,7 @@ Includes
 Constants
 
 --------------------------------------------------------------------------------------------------------*/
-const int numVertices = 200;
+const int numVertices = 400;
 const float pixelSize = 4.0f;
 /*--------------------------------------------------------------------------------------------------------
 
@@ -55,7 +55,7 @@ GLFW Window Setup
 	glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
 	int sizeOfWindow = glfwGetVideoMode(glfwGetPrimaryMonitor())->height;
 
-	GLFWwindow* window = glfwCreateWindow(glfwGetVideoMode(glfwGetPrimaryMonitor())->width, sizeOfWindow, "Vector Field Generator", NULL, NULL);
+	GLFWwindow* window = glfwCreateWindow(glfwGetVideoMode(glfwGetPrimaryMonitor())->width, sizeOfWindow, "Vector Field Generator", glfwGetPrimaryMonitor(), NULL);
 	
 	if (window == NULL) {
 		std::cout << "Failed to create GLFW window" << std::endl;
