@@ -20,7 +20,7 @@ Constants
 
 --------------------------------------------------------------------------------------------------------*/
 const int numVertices = 200;
-const float pixelSize = 2.0f;
+const float pixelSize = 4.0f;
 /*--------------------------------------------------------------------------------------------------------
 
 Function Declarations
@@ -55,7 +55,7 @@ GLFW Window Setup
 	glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
 	int sizeOfWindow = glfwGetVideoMode(glfwGetPrimaryMonitor())->height;
 
-	GLFWwindow* window = glfwCreateWindow(sizeOfWindow, sizeOfWindow, "Vector Field Generator", NULL, NULL);
+	GLFWwindow* window = glfwCreateWindow(glfwGetVideoMode(glfwGetPrimaryMonitor())->width, sizeOfWindow, "Vector Field Generator", NULL, NULL);
 	
 	if (window == NULL) {
 		std::cout << "Failed to create GLFW window" << std::endl;
@@ -134,7 +134,7 @@ Rendering Loop
 		glClearColor(0.0, 0.0, 0.0, 1.0f);
 		glClear(GL_COLOR_BUFFER_BIT);
 		int mouseState = glfwGetMouseButton(window, GLFW_MOUSE_BUTTON_LEFT);
-		if (mouseState == GLFW_PRESS) {
+		if (mouseState == GLFW_PRESS && initialX + currX  <= sizeOfWindow && initialY + currY <= sizeOfWindow) {
 			glfwGetCursorPos(window, &currX, &currY);
 			glUniform1f(xLoc, scalingFactor * (float)(currX - initialX));
 			glUniform1f(yLoc, scalingFactor * -(float)(currY - initialY));
@@ -168,6 +168,7 @@ Rendering Loop
 			boolean = 0;
 		ImGui::End();
 		ImGui::Begin("Options");
+		ImGui::SetWindowFontScale(sizeOfWindow / 1080);
 		ImGui::End();
 		ImGui::Render();
 		ImGui_ImplOpenGL3_RenderDrawData(ImGui::GetDrawData());
@@ -212,7 +213,7 @@ Function Implementations
 
 
 void framebuffer_size_callback(GLFWwindow* window, int width, int height) {
-	glViewport(0, 0, width, height);
+	glViewport(0, 0, height, height);
 }
 
 void processInput(GLFWwindow* window) {
