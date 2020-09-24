@@ -19,8 +19,7 @@ Includes
 Constants
 
 --------------------------------------------------------------------------------------------------------*/
-const int numVertices = 400;
-const float pixelSize = 4.0f;
+const int numVertices = 200;
 /*--------------------------------------------------------------------------------------------------------
 
 Function Declarations
@@ -53,9 +52,11 @@ GLFW Window Setup
 	glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 3);
 	glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 3);
 	glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
-	int sizeOfWindow = glfwGetVideoMode(glfwGetPrimaryMonitor())->height;
+	int windowHeight = glfwGetVideoMode(glfwGetPrimaryMonitor())->height;
+	int windowWidth = glfwGetVideoMode(glfwGetPrimaryMonitor())->width;
+	float pixelSize = windowHeight / 540;
 
-	GLFWwindow* window = glfwCreateWindow(glfwGetVideoMode(glfwGetPrimaryMonitor())->width, sizeOfWindow, "Vector Field Generator", glfwGetPrimaryMonitor(), NULL);
+	GLFWwindow* window = glfwCreateWindow(windowWidth, windowHeight, "Vector Field Generator", glfwGetPrimaryMonitor(), NULL);
 	
 	if (window == NULL) {
 		std::cout << "Failed to create GLFW window" << std::endl;
@@ -83,18 +84,22 @@ Initialize GLAD
 Initialize ImGui context
 
 --------------------------------------------------------------------------------------------------------*/
+	int padding = windowWidth / 216;
 	ImGui::CreateContext();
 	ImGuiIO& io = ImGui::GetIO();
 	ImGui_ImplGlfw_InitForOpenGL(window, true);
 	ImGui_ImplOpenGL3_Init("#version 430");
-	ImVec2 windowSize = ImVec2(sizeOfWindow / 2, (sizeOfWindow / 20) * 2);
+	ImVec2 FwindowSize = ImVec2(windowWidth - windowHeight - padding - padding, ((windowHeight / 20) * 2) - padding - padding);
+	ImVec2 FwindowPos = ImVec2(windowHeight + padding, padding);
+	ImVec2 OwindowSize = ImVec2(FwindowSize.x, FwindowSize.y * 2);
+	ImVec2 OwindowPos = ImVec2(FwindowPos.x, FwindowSize.y + padding + padding);
 /*--------------------------------------------------------------------------------------------------------
 
 OpenGL Setup
 
 --------------------------------------------------------------------------------------------------------*/
 
-	glViewport(0, 0, sizeOfWindow, sizeOfWindow);
+	glViewport(0, 0, windowHeight, windowHeight);
 	glEnable(GL_PROGRAM_POINT_SIZE);
 
 	unsigned int vao;
@@ -134,7 +139,7 @@ Rendering Loop
 		glClearColor(0.0, 0.0, 0.0, 1.0f);
 		glClear(GL_COLOR_BUFFER_BIT);
 		int mouseState = glfwGetMouseButton(window, GLFW_MOUSE_BUTTON_LEFT);
-		if (mouseState == GLFW_PRESS && initialX + currX  <= sizeOfWindow && initialY + currY <= sizeOfWindow) {
+		if (mouseState == GLFW_PRESS && initialX + currX  <= windowHeight && initialY + currY <= windowHeight) {
 			glfwGetCursorPos(window, &currX, &currY);
 			glUniform1f(xLoc, scalingFactor * (float)(currX - initialX));
 			glUniform1f(yLoc, scalingFactor * -(float)(currY - initialY));
@@ -160,15 +165,18 @@ Rendering Loop
 		
 		ImGui::NewFrame();
 		ImGui::Begin("Enter Functions (ESC to Close)");
-		ImGui::SetWindowSize(windowSize);
-		ImGui::SetWindowFontScale(sizeOfWindow / 1080);
+		ImGui::SetWindowSize(FwindowSize);
+		ImGui::SetWindowPos(FwindowPos);
+		ImGui::SetWindowFontScale(windowHeight / 1080);
 		ImGui::InputText("dx", dx, 200);
 		ImGui::InputText("dy", dy, 200);
 		if (ImGui::Button("Save"))
 			boolean = 0;
 		ImGui::End();
 		ImGui::Begin("Options");
-		ImGui::SetWindowFontScale(sizeOfWindow / 1080);
+		ImGui::SetWindowSize(OwindowSize);
+		ImGui::SetWindowPos(OwindowPos);
+		ImGui::SetWindowFontScale(windowHeight / 1080);
 		ImGui::End();
 		ImGui::Render();
 		ImGui_ImplOpenGL3_RenderDrawData(ImGui::GetDrawData());
