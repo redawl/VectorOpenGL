@@ -32,7 +32,7 @@ void processInput(GLFWwindow* window);
 //initializes all necessary objects
 void initialize(unsigned int& vao, Shader& ourShader, float*& vertices);
 //call this each loop
-void display(unsigned int& vao, Shader& ourShader, float* vertices);
+void display(unsigned int& vao, Shader& ourShader, float* vertices, int renderedPixels);
 //scrollwheel
 void scroll_callback(GLFWwindow* window, double xoffset, double yoffset); 
 
@@ -110,7 +110,8 @@ OpenGL Setup
 	Field vecField(numVertices, changeX.c_str(), changeY.c_str());
 	vecField.SetEquations(changeX, changeY);
 	float* vertices = 0;
-	vecField.Generate(vertices);
+	float scalingFactor = 0.001f;
+	vecField.Generate(vertices, scalingFactor);
 	initialize(vao, *ourShader, vertices);
 	
 	double currX = 0;
@@ -129,7 +130,10 @@ OpenGL Setup
 	char* dy = new char[200];
 	strcpy(dx, "x + y");
 	strcpy(dy, "y - x");
-
+	float tempPixel = pixelSize;
+	int renderedPixels = numVertices * numVertices;
+	int tempPixels = renderedPixels;
+	float tempScale = 1.0f;
 /*--------------------------------------------------------------------------------------------------------
 
 Rendering Loop
@@ -152,12 +156,12 @@ Rendering Loop
 			initialY -= currY;
 		}
 		
-		glUniform1f(scalingLoc, scalingFactor);
+		glUniform1f(scalingLoc, 0.001f);
 		ourShader->setFloat("pixelSize", pixelSize);
 
 		processInput(window);
-		vecField.Generate(vertices);
-		display(vao, *ourShader, vertices);
+		vecField.Generate(vertices, scalingFactor);
+		display(vao, *ourShader, vertices, renderedPixels);
 
 		//Imgui Stuff
 		ImGui_ImplOpenGL3_NewFrame();
@@ -177,6 +181,14 @@ Rendering Loop
 		ImGui::SetWindowSize(OwindowSize);
 		ImGui::SetWindowPos(OwindowPos);
 		ImGui::SetWindowFontScale(windowHeight / 1080);
+		ImGui::InputFloat("Pixel Size (Max 100)", &tempPixel, 0, 0);
+		ImGui::InputInt("Number of Pixels (Max 40000)", &tempPixels, 0, 0);
+		ImGui::InputFloat("Speed", &tempScale, 0, 0);
+		if (ImGui::Button("Update")) {
+			pixelSize = tempPixel <= 100 ? tempPixel : 100;
+			renderedPixels = tempPixels <= 40000 ? tempPixels : 40000 ;
+			scalingFactor = (tempScale <= 10.0f ? tempScale : 10.0f) * 0.001f;
+		}
 		ImGui::End();
 		ImGui::Render();
 		ImGui_ImplOpenGL3_RenderDrawData(ImGui::GetDrawData());
@@ -252,12 +264,12 @@ void initialize(unsigned int& vao, Shader& ourShader, float*& vertices) {
 	glEnableVertexAttribArray(timePos);
 }
 
-void display(unsigned int& vao, Shader& ourShader, float * vertices) {
+void display(unsigned int& vao, Shader& ourShader, float * vertices, int renderedPixels) {
 	glBindVertexArray(vao);
 	glBufferSubData(GL_ARRAY_BUFFER, 0, 3 * (numVertices * numVertices) * sizeof(float), vertices);
 	ourShader.setFloat("Scale", (float)y_offset);
 	ourShader.use();
-	glDrawArrays(GL_POINTS, 0, (numVertices * numVertices));
+	glDrawArrays(GL_POINTS, 0, renderedPixels);
 }
 
 void scroll_callback(GLFWwindow* window, double xoffset, double yoffset)

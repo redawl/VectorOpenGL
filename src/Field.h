@@ -7,9 +7,9 @@ class Field {
 public:
 	Field(int size, std::string x, std::string y);
 	~Field();
-	void Generate(float *& vertices);
+	void Generate(float *& vertices, float scalingFactor);
 	void SetEquations(std::string x, std::string y);
-	void SetPointPos(Point & a_point, float & time);
+	void SetPointPos(Point & a_point, float & time, float scalingFactor);
 private:
 	Point ** pointField;
 	exprtk::expression<float> expressionX;

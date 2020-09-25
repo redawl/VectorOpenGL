@@ -34,11 +34,11 @@ void Point::getCurrPos(float& x, float& y, float& time) {
 }
 
 void Point::setCurrPos(float x, float y, float & time) {
-	this->x += scalingFactor * x;
+	this->x += x;
 	if (this->x > 10.0f || this->x < -10.0f) {
 		resetX();
 	}
-	this->y += scalingFactor * y;
+	this->y += y;
 	if (this->y > 10.0f || this->y < -10.0f) {
 		resetY();
 	}

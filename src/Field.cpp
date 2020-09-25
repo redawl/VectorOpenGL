@@ -18,7 +18,7 @@ Field::~Field() {
 	delete [] pointField;
 }
 
-void Field::Generate(float *& vertices) {
+void Field::Generate(float *& vertices, float scalingFactor) {
 	if (vertices == NULL)
 		vertices = new float[fieldSize * fieldSize * 3];
 	int index = 0;
@@ -26,7 +26,7 @@ void Field::Generate(float *& vertices) {
 		for (int j = 0; j < fieldSize; j++) {
 			float time = 0;
 			if (!pointField[i][j].checkIfCooling())
-				SetPointPos(pointField[i][j], time);
+				SetPointPos(pointField[i][j], time, scalingFactor);
 			else
 				pointField[i][j].CoolDown(x, y, time);
 			vertices[index] = x;
@@ -50,12 +50,10 @@ void Field::SetEquations(std::string x, std::string y) {
 	parser.compile(y, expressionY);
 }
 
-void Field::SetPointPos(Point& a_point, float & time) {
+void Field::SetPointPos(Point& a_point, float & time, float scalingFactor) {
 	a_point.getCurrPos(x, y, time);
-	float tempX = expressionX.value();
-	float tempY = expressionY.value();
+	float tempX = scalingFactor * expressionX.value();
+	float tempY = scalingFactor * expressionY.value();
 	
 	a_point.setCurrPos(tempX, tempY, time);
-	x += scalingFactor * tempX;
-	y += scalingFactor * tempY;
 }

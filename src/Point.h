@@ -5,7 +5,6 @@
 #include "glad/glad.h"
 #include "exprtk.hpp"
 
-const float scalingFactor = 0.001f;
 class Point {
 public:
 	Point();
