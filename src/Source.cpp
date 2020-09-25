@@ -93,7 +93,7 @@ Initialize ImGui context
 	ImVec2 FwindowPos = ImVec2(windowHeight + padding, padding);
 	ImVec2 OwindowSize = ImVec2(FwindowSize.x, FwindowSize.y * 2);
 	ImVec2 OwindowPos = ImVec2(FwindowPos.x, FwindowSize.y + padding + padding);
-	ImVec2 IwindowSize = ImVec2(FwindowSize.x, windowHeight - FwindowSize.y - OwindowSize.y - padding - padding - padding);
+	ImVec2 IwindowSize = ImVec2(FwindowSize.x, windowHeight - FwindowSize.y - OwindowSize.y - padding - padding - padding - padding);
 	ImVec2 IwindowPos = ImVec2(FwindowPos.x, OwindowPos.y + OwindowSize.y + padding);
 /*--------------------------------------------------------------------------------------------------------
 
@@ -319,6 +319,6 @@ void set_equations(const char* changeX, const char* changeY) {
 	out.close();
 
 	remove("src/VectorShaders/shader.gs");
-	rename("temp.txt", "src/VectorShaders/shader.gs");
+	std::cout << "Geo Shader successfully set: " << rename("temp.txt", "src/VectorShaders/shader.gs") << std::endl;
 
 }

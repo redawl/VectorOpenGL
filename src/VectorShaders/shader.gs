@@ -48,7 +48,7 @@ Trail Generation
 --------------------------------------------------------------------------------------------------------*/
 	for(int i = index; i >= 0; i--){
 		gl_Position = scaler * vec4(x + (1.75f * currX * (1 / tempScale)), y + (1.75f * currY * (1 / tempScale)), 0.0, 1.0);
-		ColorVec = vec4(0, 0, r, 1.0f);
+		ColorVec = vec4(r, 0, b, 1.0f);
 		EmitVertex();
 		r *= fade;
 		b *= fade;
