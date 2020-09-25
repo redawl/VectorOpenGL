@@ -11,7 +11,7 @@ public:
 
 	void getCurrPos(float& x, float& y, float& time);
 	void setCurrPos(float x, float y, float & time);
-	void CoolDown(float& x, float& y, float& time);
+	void CoolDown(float& x, float& y, float& time, float & fade);
 	bool checkIfCooling();
 	void resetX();
 	void resetY();
@@ -21,6 +21,7 @@ private:
 	float velocityX;
 	float velocityY;
 	int time;
+	float fade;
 	bool isCoolingDown;
 };
 #endif

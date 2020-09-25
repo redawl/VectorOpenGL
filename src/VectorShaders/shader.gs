@@ -5,6 +5,10 @@ out vec4 ColorVec;
 in TIME{
 	float a_time;
 }the_time[];
+
+in FADE{
+	float a_fade;
+}the_fade[];
 /*--------------------------------------------------------------------------------------------------------
 
 Uniforms
@@ -32,8 +36,8 @@ void main(){
 	gl_PointSize = pixelSize * (tempScale);
 	float x = gl_in[0].gl_Position.x;
 	float y = gl_in[0].gl_Position.y;
-	float r = 1;
-	float b = 1;
+	float r = the_fade[0].a_fade;
+	float b = the_fade[0].a_fade;
 	float fade = .98;
 	int index = int(the_time[0].a_time);
 	
@@ -48,8 +52,8 @@ Trail Generation
 		EmitVertex();
 		r *= fade;
 		b *= fade;
-		x -= scalingFactor * (cos(4 * ((y*y) + (x*x))));
-		y -= scalingFactor * ((y*y)-(x*x));
+		x -= scalingFactor * ((x + y));
+		y -= scalingFactor * ((y - x));
 	}
 	EndPrimitive();
 }

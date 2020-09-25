@@ -20,20 +20,23 @@ Field::~Field() {
 
 void Field::Generate(float *& vertices, float scalingFactor) {
 	if (vertices == NULL)
-		vertices = new float[fieldSize * fieldSize * 3];
+		vertices = new float[fieldSize * fieldSize * 4];
 	int index = 0;
 	for (int i = 0; i < fieldSize; i++) {
 		for (int j = 0; j < fieldSize; j++) {
 			float time = 0;
+			float fade = 1;
 			if (!pointField[i][j].checkIfCooling())
 				SetPointPos(pointField[i][j], time, scalingFactor);
 			else
-				pointField[i][j].CoolDown(x, y, time);
+				pointField[i][j].CoolDown(x, y, time, fade);
 			vertices[index] = x;
 			index++;
 			vertices[index] = y;
 			index++;
 			vertices[index] = time;
+			index++;
+			vertices[index] = fade;
 			index++;
 		}
 	}

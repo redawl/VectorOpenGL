@@ -93,6 +93,8 @@ Initialize ImGui context
 	ImVec2 FwindowPos = ImVec2(windowHeight + padding, padding);
 	ImVec2 OwindowSize = ImVec2(FwindowSize.x, FwindowSize.y * 2);
 	ImVec2 OwindowPos = ImVec2(FwindowPos.x, FwindowSize.y + padding + padding);
+	ImVec2 IwindowSize = ImVec2(FwindowSize.x, windowHeight - FwindowSize.y - OwindowSize.y - padding - padding - padding);
+	ImVec2 IwindowPos = ImVec2(FwindowPos.x, OwindowPos.y + OwindowSize.y + padding);
 /*--------------------------------------------------------------------------------------------------------
 
 OpenGL Setup
@@ -187,8 +189,13 @@ Rendering Loop
 		if (ImGui::Button("Update")) {
 			pixelSize = tempPixel <= 100 ? tempPixel : 100;
 			renderedPixels = tempPixels <= 40000 ? tempPixels : 40000 ;
-			scalingFactor = (tempScale <= 10.0f ? tempScale : 10.0f) * 0.001f;
+			scalingFactor = ((tempScale * tempScale <= 100.0f) && tempScale != 0 ? tempScale * tempScale : 100.0f) * 0.001f;
 		}
+		ImGui::End();
+		ImGui::Begin("Info");
+		ImGui::SetWindowSize(IwindowSize);
+		ImGui::SetWindowPos(IwindowPos);
+		ImGui::SetWindowFontScale(windowHeight / 1080);
 		ImGui::End();
 		ImGui::Render();
 		ImGui_ImplOpenGL3_RenderDrawData(ImGui::GetDrawData());
@@ -251,22 +258,26 @@ void initialize(unsigned int& vao, Shader& ourShader, float*& vertices) {
 	glGenBuffers(1, &vbo);
 
 	glBindBuffer(GL_ARRAY_BUFFER, vbo);
-	glBufferData(GL_ARRAY_BUFFER, 3 * (numVertices * numVertices) * sizeof(float), vertices, GL_DYNAMIC_DRAW);
+	glBufferData(GL_ARRAY_BUFFER, 4 * (numVertices * numVertices) * sizeof(float), vertices, GL_DYNAMIC_DRAW);
 
 	int position = glGetAttribLocation(ourShader.ID, "aPos");
 
-	glVertexAttribPointer(position, 2, GL_FLOAT, GL_FALSE, 3 * sizeof(float), (void*)0);
+	glVertexAttribPointer(position, 2, GL_FLOAT, GL_FALSE, 4 * sizeof(float), (void*)0);
 
 	glEnableVertexAttribArray(position);
 
 	int timePos = glGetAttribLocation(ourShader.ID, "time");
-	glVertexAttribPointer(timePos, 1, GL_FLOAT, GL_FALSE, 3 * sizeof(float), (void*)(2 * sizeof(float)));
+	glVertexAttribPointer(timePos, 1, GL_FLOAT, GL_FALSE, 4 * sizeof(float), (void*)(2 * sizeof(float)));
 	glEnableVertexAttribArray(timePos);
+
+	int fadePos = glGetAttribLocation(ourShader.ID, "fade");
+	glVertexAttribPointer(fadePos, 1, GL_FLOAT, GL_FALSE, 4 * sizeof(float), (void*)(3 * sizeof(float)));
+	glEnableVertexAttribArray(fadePos);
 }
 
 void display(unsigned int& vao, Shader& ourShader, float * vertices, int renderedPixels) {
 	glBindVertexArray(vao);
-	glBufferSubData(GL_ARRAY_BUFFER, 0, 3 * (numVertices * numVertices) * sizeof(float), vertices);
+	glBufferSubData(GL_ARRAY_BUFFER, 0, 4 * (numVertices * numVertices) * sizeof(float), vertices);
 	ourShader.setFloat("Scale", (float)y_offset);
 	ourShader.use();
 	glDrawArrays(GL_POINTS, 0, renderedPixels);
@@ -287,7 +298,7 @@ void set_equations(const char* changeX, const char* changeY) {
 	std::ofstream out;
 	out.open("temp.txt");
 	char temp[200];
-	for (int i = 0; i < 50; i++) {
+	for (int i = 0; i < 54; i++) {
 		in.getline(temp, 200);
 		out << temp;
 		out << '\n';
