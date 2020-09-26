@@ -47,13 +47,13 @@ Trail Generation
 
 --------------------------------------------------------------------------------------------------------*/
 	for(int i = index; i >= 0; i--){
-		gl_Position = scaler * vec4(x + (1.75f * currX * (1 / tempScale)), y + (1.75f * currY * (1 / tempScale)), 0.0, 1.0);
+		gl_Position = scaler * vec4(x + (currX * (1 / tempScale)), y + (currY * (1 / tempScale)), 0.0, 1.0);
 		ColorVec = vec4(r, 0, b, 1.0f);
 		EmitVertex();
 		r *= fade;
 		b *= fade;
-		x -= scalingFactor * (cos(4 * ((x*x) + (y*y))));
-		y -= scalingFactor * ((y*y) - (x*x));
+		x -= scalingFactor * ((x + y));
+		y -= scalingFactor * ((y - x));
 	}
 	EndPrimitive();
 }
