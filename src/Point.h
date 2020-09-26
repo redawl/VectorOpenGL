@@ -10,7 +10,7 @@ public:
 	Point();
 
 	void getCurrPos(float& x, float& y, float& time);
-	void setCurrPos(float x, float y, float & time);
+	void setCurrPos(float x, float y);
 	void CoolDown(float& x, float& y, float& time, float & fade);
 	bool checkIfCooling();
 	void resetX();
@@ -18,8 +18,6 @@ public:
 private:
 	float x;
 	float y;
-	float velocityX;
-	float velocityY;
 	int time;
 	float fade;
 	bool isCoolingDown;

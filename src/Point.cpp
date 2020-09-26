@@ -4,8 +4,6 @@ Point::Point() {
 	x = ((float)(rand()) / 500.0f) - 5.0f;
 	y = ((float)(rand()) / 500.0f) - 5.0f;
 
-	velocityX = 0;
-	velocityY = 0;
 	time = 1;
 	isCoolingDown = false;
 	fade = 1;
@@ -36,7 +34,7 @@ void Point::getCurrPos(float& x, float& y, float& time) {
 	this->time++;
 }
 
-void Point::setCurrPos(float x, float y, float & time) {
+void Point::setCurrPos(float x, float y) {
 	this->x += x;
 	if (this->x > 10.0f || this->x < -10.0f) {
 		resetX();
@@ -45,8 +43,6 @@ void Point::setCurrPos(float x, float y, float & time) {
 	if (this->y > 10.0f || this->y < -10.0f) {
 		resetY();
 	}
-
-	time = this->time;
 }
 
 void Point::CoolDown(float &x, float &y, float & time, float & fade) {

@@ -58,5 +58,5 @@ void Field::SetPointPos(Point& a_point, float & time, float scalingFactor) {
 	float tempX = scalingFactor * expressionX.value();
 	float tempY = scalingFactor * expressionY.value();
 	
-	a_point.setCurrPos(tempX, tempY, time);
+	a_point.setCurrPos(tempX, tempY);
 }
