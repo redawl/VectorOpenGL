@@ -1,8 +1,8 @@
 #include "Point.h"
 
 Point::Point() {
-	x = ((float)(rand()) / 500.0f) - 5.0f;
-	y = ((float)(rand()) / 500.0f) - 5.0f;
+	x = ((float)rand()) / (RAND_MAX / 20.0f) - 10.0f;
+	y = ((float)rand()) / (RAND_MAX / 20.0f) - 10.0f;
 
 	time = 1;
 	isCoolingDown = false;
@@ -10,13 +10,13 @@ Point::Point() {
 }
 
 void Point::resetX() {
-	x = ((float)(rand()) / 500.0f) - 5.0f;
+	x = ((float)rand()) / (RAND_MAX / 20.0f) - 10.0f;
 	time = 1;
 	fade = 1;
 }
 
 void Point::resetY() {
-	y = ((float)(rand()) / 500.0f) - 5.0f;
+	y = ((float)rand()) / (RAND_MAX / 20.0f) - 10.0f;
 	time = 1;
 	fade = 1;
 }
