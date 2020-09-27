@@ -108,7 +108,7 @@ OpenGL Setup
 	std::string changeX = "(x + y)";
 	std::string changeY = "(y - x)";
 	set_equations(changeX.c_str(), changeY.c_str());
-	Shader  * ourShader = new Shader("src/VectorShaders/shader.vs", "src/VectorShaders/shader.fs", "src/VectorShaders/shader.gs");
+	Shader * ourShader = new Shader("src/VectorShaders/shader.vs", "src/VectorShaders/shader.fs", "src/VectorShaders/shader.gs");
 	Field vecField(numVertices, changeX.c_str(), changeY.c_str());
 	vecField.SetEquations(changeX, changeY);
 	float* vertices = 0;
@@ -118,9 +118,6 @@ OpenGL Setup
 	
 	double currX = 0;
 	double currY = 0;
-	unsigned int xLoc = glGetUniformLocation(ourShader->ID, "currX");
-	unsigned int yLoc = glGetUniformLocation(ourShader->ID, "currY");
-	unsigned int scalingLoc = glGetUniformLocation(ourShader->ID, "scalingFactor");
 	double initialX = 0;
 	double initialY = 0;
 
@@ -146,8 +143,8 @@ Rendering Loop
 		int mouseState = glfwGetMouseButton(window, GLFW_MOUSE_BUTTON_LEFT);
 		if (mouseState == GLFW_PRESS && initialX + currX  <= windowHeight && initialY + currY <= windowHeight) {
 			glfwGetCursorPos(window, &currX, &currY);
-			glUniform1f(xLoc, scalingFactor * 2.00f * (float)(currX - initialX));
-			glUniform1f(yLoc, scalingFactor * 2.00f * -(float)(currY - initialY));
+			ourShader->setFloat("currX", scalingFactor * 2.00f * (float)(currX - initialX));
+			ourShader->setFloat("currY", scalingFactor * 2.00f * -(float)(currY - initialY));
 			currX -= initialX;
 			currY -= initialY;
 		}
@@ -157,7 +154,7 @@ Rendering Loop
 			initialY -= currY;
 		}
 		
-		glUniform1f(scalingLoc, 0.001f);
+		ourShader->setFloat("scalingFactor", scalingFactor);
 		ourShader->setFloat("pixelSize", pixelSize);
 
 		processInput(window);
@@ -183,9 +180,6 @@ Rendering Loop
 
 			delete ourShader;
 			ourShader = new Shader("src/VectorShaders/shader.vs", "src/VectorShaders/shader.fs", "src/VectorShaders/shader.gs");
-			xLoc = glGetUniformLocation(ourShader->ID, "currX");
-			yLoc = glGetUniformLocation(ourShader->ID, "currY");
-			scalingLoc = glGetUniformLocation(ourShader->ID, "scalingFactor");
 		}
 		ImGui::End();
 		ImGui::Begin("Options");
