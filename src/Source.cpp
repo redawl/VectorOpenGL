@@ -123,7 +123,6 @@ OpenGL Setup
 	unsigned int scalingLoc = glGetUniformLocation(ourShader->ID, "scalingFactor");
 	double initialX = 0;
 	double initialY = 0;
-	float boolean = 1;
 
 	changeX = "(cos(4 * ((x*x) + (y*y))))";
 	changeY = "((y*y) - (x*x))";
@@ -176,8 +175,18 @@ Rendering Loop
 		ImGui::SetWindowFontScale(windowHeight / 1080);
 		ImGui::InputText("dx", dx, 200);
 		ImGui::InputText("dy", dy, 200);
-		if (ImGui::Button("Save"))
-			boolean = 0;
+		if (ImGui::Button("Save")) {
+			changeX = dx;
+			changeY = dy;
+			set_equations(changeX.c_str(), changeY.c_str());
+			vecField.SetEquations(changeX, changeY);
+
+			delete ourShader;
+			ourShader = new Shader("src/VectorShaders/shader.vs", "src/VectorShaders/shader.fs", "src/VectorShaders/shader.gs");
+			xLoc = glGetUniformLocation(ourShader->ID, "currX");
+			yLoc = glGetUniformLocation(ourShader->ID, "currY");
+			scalingLoc = glGetUniformLocation(ourShader->ID, "scalingFactor");
+		}
 		ImGui::End();
 		ImGui::Begin("Options");
 		ImGui::SetWindowSize(OwindowSize);
@@ -199,20 +208,6 @@ Rendering Loop
 		ImGui::End();
 		ImGui::Render();
 		ImGui_ImplOpenGL3_RenderDrawData(ImGui::GetDrawData());
-
-		if (boolean == 0) {
-			changeX = dx;
-			changeY = dy;
-			set_equations(changeX.c_str(), changeY.c_str());
-			vecField.SetEquations(changeX, changeY);
-
-			delete ourShader;
-			ourShader = new Shader("src/VectorShaders/shader.vs", "src/VectorShaders/shader.fs", "src/VectorShaders/shader.gs");
-			xLoc = glGetUniformLocation(ourShader->ID, "currX");
-			yLoc = glGetUniformLocation(ourShader->ID, "currY");
-			scalingLoc = glGetUniformLocation(ourShader->ID, "scalingFactor");
-			boolean = 1;
-		}
 		
 		glfwSwapBuffers(window);
 		glfwPollEvents();
