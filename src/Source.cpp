@@ -105,8 +105,8 @@ OpenGL Setup
 	glEnable(GL_PROGRAM_POINT_SIZE);
 
 	unsigned int vao;
-	std::string changeX = "(x + y)";
-	std::string changeY = "(y - x)";
+	std::string changeX = "x + y";
+	std::string changeY = "y - x";
 	set_equations(changeX.c_str(), changeY.c_str());
 	Shader * ourShader = new Shader("src/VectorShaders/shader.vs", "src/VectorShaders/shader.fs", "src/VectorShaders/shader.gs");
 	Field vecField(numVertices, changeX.c_str(), changeY.c_str());
@@ -287,7 +287,7 @@ void set_equations(const char* changeX, const char* changeY) {
 	std::ofstream out;
 	out.open("temp.txt");
 	char temp[200];
-	for (int i = 0; i < 54; i++) {
+	for (int i = 0; i < 51; i++) {
 		in.getline(temp, 200);
 		out << temp;
 		out << '\n';

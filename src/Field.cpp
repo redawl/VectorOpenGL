@@ -42,15 +42,14 @@ void Field::Generate(float *& vertices, float scalingFactor) {
 	}
 }
 
-void Field::SetEquations(std::string x, std::string y) {
+bool Field::SetEquations(std::string x, std::string y) {
 	exprtk::symbol_table<float> symbol_table;
 	symbol_table.add_variable("x", this->x);
 	symbol_table.add_variable("y", this->y);
 	expressionX.register_symbol_table(symbol_table);
 	expressionY.register_symbol_table(symbol_table);
 	exprtk::parser<float> parser;
-	parser.compile(x, expressionX);
-	parser.compile(y, expressionY);
+	return parser.compile(x, expressionX) && parser.compile(y, expressionY);
 }
 
 void Field::SetPointPos(Point& a_point, float & time, float scalingFactor) {
