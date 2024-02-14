@@ -49,8 +49,8 @@ Trail Generation
 		EmitVertex();
 		r *= fade;
 		b *= fade;
-		x -= scalingFactor * (x + y);
-		y -= scalingFactor * (y - x);
+		x -= scalingFactor * (X_EQUATION);
+		y -= scalingFactor * (Y_EQUATION);
 	}
 	EndPrimitive();
 }

@@ -52,7 +52,7 @@ bool Field::SetEquations(std::string x, std::string y) {
 	return parser.compile(x, expressionX) && parser.compile(y, expressionY);
 }
 
-void Field::SetPointPos(Point& a_point, float & time, float scalingFactor) {
+void Field::SetPointPos(Point & a_point, float & time, float scalingFactor) {
 	a_point.getCurrPos(x, y, time);
 	float tempX = scalingFactor * expressionX.value();
 	float tempY = scalingFactor * expressionY.value();

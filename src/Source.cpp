@@ -19,28 +19,31 @@ Includes
 Constants
 
 --------------------------------------------------------------------------------------------------------*/
-const int numVertices = 200;
+const int NUM_VERTICES = 200;
+const int NUM_PIXELS   = NUM_VERTICES * NUM_VERTICES;
+
+const char * VECTOR_SHADER   = "VectorShaders/shader.vs";
+const char * GEOMETRY_SHADER = "VectorShaders/shader.gs";
+const char * FRAGMENT_SHADER = "VectorShaders/shader.fs";
 /*--------------------------------------------------------------------------------------------------------
 
 Function Declarations
 
 --------------------------------------------------------------------------------------------------------*/
-//changes the layout of pixels with the window size
+// changes the layout of pixels with the window size
 void framebuffer_size_callback(GLFWwindow * window, int width, int height);
-//checks if the user has hit the escape key, and terminates the window if so
-void processInput(GLFWwindow* window);
-//initializes all necessary objects
+// checks if the user has hit the escape key, and terminates the window if so
+void processInput(GLFWwindow * window);
+// initializes all necessary objects
 void initialize(unsigned int& vao, Shader& ourShader, float*& vertices);
-//call this each loop
+// call this each loop
 void display(unsigned int& vao, Shader& ourShader, float* vertices, int renderedPixels);
-//scrollwheel
+// scrollwheel
 void scroll_callback(GLFWwindow* window, double xoffset, double yoffset); 
-
-void set_equations(const char * changeX, const char * changeY);
 
 double y_offset = 1;//current y offset from scroll wheel
 
-int main(void)
+int main(int argc, char ** argv)
 {
 /*--------------------------------------------------------------------------------------------------------
 
@@ -107,11 +110,10 @@ OpenGL Setup
 	unsigned int vao;
 	std::string changeX = "x + y";
 	std::string changeY = "y - x";
-	set_equations(changeX.c_str(), changeY.c_str());
-	Shader * ourShader = new Shader("src/VectorShaders/shader.vs", "src/VectorShaders/shader.fs", "src/VectorShaders/shader.gs");
-	Field vecField(numVertices, changeX.c_str(), changeY.c_str());
+	Shader * ourShader = new Shader(VECTOR_SHADER, FRAGMENT_SHADER, GEOMETRY_SHADER, changeX, changeY);
+	Field vecField(NUM_VERTICES, changeX.c_str(), changeY.c_str());
 	vecField.SetEquations(changeX, changeY);
-	float* vertices = 0;
+	float * vertices = 0;
 	float scalingFactor = 0.001f;
 	vecField.Generate(vertices, scalingFactor);
 	initialize(vao, *ourShader, vertices);
@@ -129,8 +131,8 @@ OpenGL Setup
 	strcpy(dx, "x + y");
 	strcpy(dy, "y - x");
 	float tempPixel = pixelSize;
-	int renderedPixels = numVertices * numVertices;
-	int tempPixels = renderedPixels;
+	int renderedPixels = NUM_PIXELS;
+	int tempPixels = NUM_PIXELS;
 	float tempScale = 1.0f;
 /*--------------------------------------------------------------------------------------------------------
 
@@ -138,8 +140,11 @@ Rendering Loop
 
 --------------------------------------------------------------------------------------------------------*/
 	while (!glfwWindowShouldClose(window)) {
+		// Clear canvas for new render
 		glClearColor(0.0, 0.0, 0.0, 1.0f);
 		glClear(GL_COLOR_BUFFER_BIT);
+
+		// If right mouse button is clicked, handle panning behavior
 		int mouseState = glfwGetMouseButton(window, GLFW_MOUSE_BUTTON_LEFT);
 		if (mouseState == GLFW_PRESS && initialX + currX  <= windowHeight && initialY + currY <= windowHeight) {
 			glfwGetCursorPos(window, &currX, &currY);
@@ -161,7 +166,7 @@ Rendering Loop
 		vecField.Generate(vertices, scalingFactor);
 		display(vao, *ourShader, vertices, renderedPixels);
 
-		//Imgui Stuff
+		// Imgui Stuff
 		ImGui_ImplOpenGL3_NewFrame();
 		ImGui_ImplGlfw_NewFrame();
 		
@@ -175,11 +180,10 @@ Rendering Loop
 		if (ImGui::Button("Save")) {
 			changeX = dx;
 			changeY = dy;
-			set_equations(changeX.c_str(), changeY.c_str());
 			vecField.SetEquations(changeX, changeY);
 
 			delete ourShader;
-			ourShader = new Shader("src/VectorShaders/shader.vs", "src/VectorShaders/shader.fs", "src/VectorShaders/shader.gs");
+			ourShader = new Shader(VECTOR_SHADER, FRAGMENT_SHADER, GEOMETRY_SHADER, changeX, changeY);
 		}
 		ImGui::End();
 		ImGui::Begin("Options");
@@ -215,12 +219,13 @@ Cleanup
 	ImGui_ImplGlfw_Shutdown();
 	ImGui::DestroyContext();
 	glfwTerminate();
-	delete[] vertices;
+	delete [] vertices;
 	delete ourShader;
-	delete[] dx;
-	delete[] dy;
+	delete [] dx;
+	delete [] dy;
 	return 0;
 }
+
 /*--------------------------------------------------------------------------------------------------------
 
 Function Implementations
@@ -247,7 +252,7 @@ void initialize(unsigned int& vao, Shader& ourShader, float*& vertices) {
 	glGenBuffers(1, &vbo);
 
 	glBindBuffer(GL_ARRAY_BUFFER, vbo);
-	glBufferData(GL_ARRAY_BUFFER, 4 * (numVertices * numVertices) * sizeof(float), vertices, GL_DYNAMIC_DRAW);
+	glBufferData(GL_ARRAY_BUFFER, 4 * NUM_PIXELS * sizeof(float), vertices, GL_DYNAMIC_DRAW);
 
 	int position = glGetAttribLocation(ourShader.ID, "aPos");
 
@@ -266,7 +271,7 @@ void initialize(unsigned int& vao, Shader& ourShader, float*& vertices) {
 
 void display(unsigned int& vao, Shader& ourShader, float * vertices, int renderedPixels) {
 	glBindVertexArray(vao);
-	glBufferSubData(GL_ARRAY_BUFFER, 0, 4 * (numVertices * numVertices) * sizeof(float), vertices);
+	glBufferSubData(GL_ARRAY_BUFFER, 0, 4 * NUM_PIXELS * sizeof(float), vertices);
 	ourShader.setFloat("Scale", (float)y_offset);
 	ourShader.use();
 	glDrawArrays(GL_POINTS, 0, renderedPixels);
@@ -277,37 +282,4 @@ void scroll_callback(GLFWwindow* window, double xoffset, double yoffset)
 	if(y_offset - yoffset < 5 && y_offset - yoffset >=1)
 		y_offset -= yoffset;
 	std::cout << y_offset << std::endl;
-}
-
-void set_equations(const char* changeX, const char* changeY) {
-	//io
-	std::ifstream in;
-	in.open("src/VectorShaders/shader.gs");
-
-	std::ofstream out;
-	out.open("temp.txt");
-	char temp[200];
-	for (int i = 0; i < 51; i++) {
-		in.getline(temp, 200);
-		out << temp;
-		out << '\n';
-	}
-
-	in.getline(temp, 200);
-	out << "		x -= scalingFactor * (" << changeX << ");\n";
-	in.getline(temp, 200);
-	out << "		y -= scalingFactor * (" << changeY << ");\n";
-
-	for (int i = 0; i < 3; i++) {
-		in.getline(temp, 200);
-		out << temp;
-		out << '\n';
-	}
-
-	in.close();
-	out.close();
-
-	remove("src/VectorShaders/shader.gs");
-	std::cout << "Geo Shader successfully set: " << rename("temp.txt", "src/VectorShaders/shader.gs") << std::endl;
-
 }
