@@ -1,8 +1,1 @@
-Dependancies
-Debug
-Release
-*.sln
-*.vcxproj
-*.vcxproj.filters
-*.vcxproj.user
-x64
+imgui.ini

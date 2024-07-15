@@ -1,5 +1,4 @@
 #include "Shader.h"
-#include <glad/glad.h>
 
 Shader::Shader(const char * vertexPath, const char * fragmentPath, const char * geometryPath, std::string xEquation, std::string yEquation) {
 	// Retrieve shader code

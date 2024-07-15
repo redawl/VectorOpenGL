@@ -2,7 +2,6 @@
 #define POINT_H
 #include <iostream>
 #include <fstream>
-#include "glad/glad.h"
 #include "exprtk.hpp"
 
 class Point {

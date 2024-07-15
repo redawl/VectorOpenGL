@@ -10,7 +10,7 @@
 
 VectorOpenGL models vector fields, based on an x differential equation, and a y differential equation. With these two inputs, it can create beautiful animated graphs:
 
-![Image1](src/imgs/graph.png)
+![Image1](docs/imgs/graph.png)
 
 ## Issues
 

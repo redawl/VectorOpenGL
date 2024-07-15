@@ -11,9 +11,9 @@ Includes
 #include "Field.h"
 #include "Point.h"
 #include <time.h>
-#include "Imgui/imgui.h"
-#include "Imgui/imgui_impl_glfw.h"
-#include "Imgui/imgui_impl_opengl3.h"
+#include <imgui/imgui.h>
+#include <imgui/imgui_impl_glfw.h>
+#include <imgui/imgui_impl_opengl3.h>
 /*--------------------------------------------------------------------------------------------------------
 
 Constants
@@ -22,9 +22,9 @@ Constants
 const int NUM_VERTICES = 200;
 const int NUM_PIXELS   = NUM_VERTICES * NUM_VERTICES;
 
-const char * VECTOR_SHADER   = "VectorShaders/shader.vs";
-const char * GEOMETRY_SHADER = "VectorShaders/shader.gs";
-const char * FRAGMENT_SHADER = "VectorShaders/shader.fs";
+const char * VECTOR_SHADER   = "src/VectorShaders/shader.vs";
+const char * GEOMETRY_SHADER = "src/VectorShaders/shader.gs";
+const char * FRAGMENT_SHADER = "src/VectorShaders/shader.fs";
 /*--------------------------------------------------------------------------------------------------------
 
 Function Declarations
@@ -283,3 +283,4 @@ void scroll_callback(GLFWwindow* window, double xoffset, double yoffset)
 		y_offset -= yoffset;
 	std::cout << y_offset << std::endl;
 }
+
