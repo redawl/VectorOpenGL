@@ -1,8 +1,3 @@
-/*--------------------------------------------------------------------------------------------------------
-
-Includes
-
---------------------------------------------------------------------------------------------------------*/
 #include <glad/glad.h>
 #include <GLFW/glfw3.h>
 #include <iostream>
@@ -14,42 +9,39 @@ Includes
 #include <imgui/imgui.h>
 #include <imgui/imgui_impl_glfw.h>
 #include <imgui/imgui_impl_opengl3.h>
-/*--------------------------------------------------------------------------------------------------------
 
-Constants
+#define VERSION "0.1.0"
 
---------------------------------------------------------------------------------------------------------*/
 const int NUM_VERTICES = 200;
 const int NUM_PIXELS   = NUM_VERTICES * NUM_VERTICES;
 
 const char * VECTOR_SHADER   = "src/VectorShaders/shader.vs";
 const char * GEOMETRY_SHADER = "src/VectorShaders/shader.gs";
 const char * FRAGMENT_SHADER = "src/VectorShaders/shader.fs";
-/*--------------------------------------------------------------------------------------------------------
 
-Function Declarations
-
---------------------------------------------------------------------------------------------------------*/
 // changes the layout of pixels with the window size
 void framebuffer_size_callback(GLFWwindow * window, int width, int height);
+
 // checks if the user has hit the escape key, and terminates the window if so
 void processInput(GLFWwindow * window);
+
 // initializes all necessary objects
 void initialize(unsigned int& vao, Shader& ourShader, float*& vertices);
+
 // call this each loop
 void display(unsigned int& vao, Shader& ourShader, float* vertices, int renderedPixels);
+
 // scrollwheel
 void scroll_callback(GLFWwindow* window, double xoffset, double yoffset); 
 
 double y_offset = 1;//current y offset from scroll wheel
 
-int main(int argc, char ** argv)
-{
-/*--------------------------------------------------------------------------------------------------------
+int main(int argc, char ** argv) {
+    if(argc > 1 && strncmp(argv[1], "-v", 2) == 0) {
+        std::cout << "Version: " << VERSION << std::endl;
+        return 0;
+    }
 
-GLFW Window Setup
-
---------------------------------------------------------------------------------------------------------*/
 	srand(time(0));
 	glfwInit();
 	glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 3);
@@ -72,21 +64,12 @@ GLFW Window Setup
 
 	glfwSwapInterval(1);
 	glfwSetInputMode(window, GLFW_STICKY_MOUSE_BUTTONS, GLFW_TRUE);
-/*--------------------------------------------------------------------------------------------------------
-
-Initialize GLAD
-
---------------------------------------------------------------------------------------------------------*/
 
 	if (!gladLoadGLLoader((GLADloadproc)glfwGetProcAddress)) {
 		std::cout << "Failed to initialize GLAD" << std::endl;
 		return -1;
 	}
-/*--------------------------------------------------------------------------------------------------------
 
-Initialize ImGui context
-
---------------------------------------------------------------------------------------------------------*/
 	int padding = windowWidth / 216;
 	ImGui::CreateContext();
 	ImGuiIO& io = ImGui::GetIO();
@@ -98,11 +81,6 @@ Initialize ImGui context
 	ImVec2 OwindowPos = ImVec2(FwindowPos.x, FwindowSize.y + padding + padding);
 	ImVec2 IwindowSize = ImVec2(FwindowSize.x, windowHeight - FwindowSize.y - OwindowSize.y - padding - padding - padding - padding);
 	ImVec2 IwindowPos = ImVec2(FwindowPos.x, OwindowPos.y + OwindowSize.y + padding);
-/*--------------------------------------------------------------------------------------------------------
-
-OpenGL Setup
-
---------------------------------------------------------------------------------------------------------*/
 
 	glViewport(0, 0, windowHeight, windowHeight);
 	glEnable(GL_PROGRAM_POINT_SIZE);
@@ -134,11 +112,7 @@ OpenGL Setup
 	int renderedPixels = NUM_PIXELS;
 	int tempPixels = NUM_PIXELS;
 	float tempScale = 1.0f;
-/*--------------------------------------------------------------------------------------------------------
 
-Rendering Loop
-
---------------------------------------------------------------------------------------------------------*/
 	while (!glfwWindowShouldClose(window)) {
 		// Clear canvas for new render
 		glClearColor(0.0, 0.0, 0.0, 1.0f);
@@ -210,11 +184,7 @@ Rendering Loop
 		glfwSwapBuffers(window);
 		glfwPollEvents();
 	}
-/*--------------------------------------------------------------------------------------------------------
 
-Cleanup
-
---------------------------------------------------------------------------------------------------------*/
 	ImGui_ImplOpenGL3_Shutdown();
 	ImGui_ImplGlfw_Shutdown();
 	ImGui::DestroyContext();
@@ -225,13 +195,6 @@ Cleanup
 	delete [] dy;
 	return 0;
 }
-
-/*--------------------------------------------------------------------------------------------------------
-
-Function Implementations
-
---------------------------------------------------------------------------------------------------------*/
-
 
 void framebuffer_size_callback(GLFWwindow* window, int width, int height) {
 	glViewport(0, 0, height, height);

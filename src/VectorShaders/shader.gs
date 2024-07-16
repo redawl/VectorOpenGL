@@ -6,21 +6,13 @@ in TRANSFER{
 	float time;
 	float fade;
 }transfer[];
-/*--------------------------------------------------------------------------------------------------------
 
-Uniforms
-
---------------------------------------------------------------------------------------------------------*/
 uniform float Scale;
 uniform float currX;
 uniform float currY;
 uniform float scalingFactor;
 uniform float pixelSize;
-/*--------------------------------------------------------------------------------------------------------
 
-Main Function
-
---------------------------------------------------------------------------------------------------------*/
 void main(){
 	float tempScale = 1 / Scale;
 	
@@ -38,12 +30,8 @@ void main(){
 	float fade = .98;
 	int index = int(transfer[0].time);
 	
-/*--------------------------------------------------------------------------------------------------------
-
-Trail Generation
-
---------------------------------------------------------------------------------------------------------*/
-	for(int i = index; i >= 0; i--){
+	// trail generation
+    for(int i = index; i >= 0; i--){
 		gl_Position = scaler * vec4(x + (currX * (1 / tempScale)), y + (currY * (1 / tempScale)), 0.0, 1.0);
 		ColorVec = vec4(r, 0, b, 1.0f);
 		EmitVertex();

@@ -1,1 +1,4 @@
-imgui.ini
+**/imgui.ini
+**/*.o
+**/vog
+**/*.swp
