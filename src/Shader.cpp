@@ -1,11 +1,6 @@
 #include "Shader.h"
 
-Shader::Shader(const char * vertexPath, const char * fragmentPath, const char * geometryPath, std::string xEquation, std::string yEquation) {
-	// Retrieve shader code
-	std::string vShaderCode = readFile(vertexPath);
-	std::string fShaderCode = readFile(fragmentPath);
-	std::string gShaderCode = readFile(geometryPath);
-	
+Shader::Shader(std::string xEquation, std::string yEquation) {
 	// compile shaders
 	unsigned int vertex, fragment, geometry;
 	

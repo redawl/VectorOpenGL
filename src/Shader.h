@@ -8,11 +8,19 @@
 #include <sstream>
 #include <iostream>
 
+// Shader blobs
+extern uint8_t shader_vs[];
+extern int shader_vs_size;
+extern uint8_t shader_gs[];
+extern int shader_gs_size;
+extern uint8_t shader_fs[];
+extern int shader_fs_size;
+
 class Shader {
 public:
 	unsigned int ID;
 
-	Shader(const char* vertexPath, const char* fragmentPath, const char* geometryPath, std::string xEquation, std::string yEquation);
+	Shader(std::string xEquation, std::string yEquation);
 
 	void use();
 
@@ -21,6 +29,9 @@ public:
 	void setFloat(const std::string& name, float value) const;
 
 private:
+    std::string vShaderCode = std::string((char *) shader_vs, shader_vs_size);
+    std::string fShaderCode = std::string((char *) shader_fs, shader_fs_size);
+    std::string gShaderCode = std::string((char *) shader_gs, shader_gs_size);
 	// Helper methods
 	std::string readFile(const char * filePath) const {
 		std::ifstream fileStream;

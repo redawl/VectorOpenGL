@@ -10,14 +10,10 @@
 #include <imgui/imgui_impl_glfw.h>
 #include <imgui/imgui_impl_opengl3.h>
 
-#define VERSION "0.1.0"
+#define VERSION "0.1.1"
 
 const int NUM_VERTICES = 200;
 const int NUM_PIXELS   = NUM_VERTICES * NUM_VERTICES;
-
-const char * VECTOR_SHADER   = "src/VectorShaders/shader.vs";
-const char * GEOMETRY_SHADER = "src/VectorShaders/shader.gs";
-const char * FRAGMENT_SHADER = "src/VectorShaders/shader.fs";
 
 // changes the layout of pixels with the window size
 void framebuffer_size_callback(GLFWwindow * window, int width, int height);
@@ -88,7 +84,7 @@ int main(int argc, char ** argv) {
 	unsigned int vao;
 	std::string changeX = "x + y";
 	std::string changeY = "y - x";
-	Shader * ourShader = new Shader(VECTOR_SHADER, FRAGMENT_SHADER, GEOMETRY_SHADER, changeX, changeY);
+	Shader * ourShader = new Shader(changeX, changeY);
 	Field vecField(NUM_VERTICES, changeX.c_str(), changeY.c_str());
 	vecField.SetEquations(changeX, changeY);
 	float * vertices = 0;
@@ -157,7 +153,7 @@ int main(int argc, char ** argv) {
 			vecField.SetEquations(changeX, changeY);
 
 			delete ourShader;
-			ourShader = new Shader(VECTOR_SHADER, FRAGMENT_SHADER, GEOMETRY_SHADER, changeX, changeY);
+			ourShader = new Shader(changeX, changeY);
 		}
 		ImGui::End();
 		ImGui::Begin("Options");
