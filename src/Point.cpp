@@ -68,3 +68,4 @@ void Point::CoolDown(float &x, float &y, float & time, float & fade) {
 bool Point::checkIfCooling() {
 	return isCoolingDown;
 }
+

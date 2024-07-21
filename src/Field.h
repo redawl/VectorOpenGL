@@ -1,7 +1,6 @@
 #ifndef FIELD_H
 #define FIELD_H
 #include "Point.h"
-#include <iostream>
 
 class Field {
 public:
@@ -19,3 +18,4 @@ private:
 	int fieldSize;
 };
 #endif
+

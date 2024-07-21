@@ -69,6 +69,11 @@ int main(int argc, char ** argv) {
 	int padding = windowWidth / 216;
 	ImGui::CreateContext();
 	ImGuiIO& io = ImGui::GetIO();
+
+    // Don't create imgui.ini
+    io.IniFilename = NULL;
+    io.LogFilename = NULL;
+
 	ImGui_ImplGlfw_InitForOpenGL(window, true);
 	ImGui_ImplOpenGL3_Init("#version 430");
 	ImVec2 FwindowSize = ImVec2(windowWidth - windowHeight - padding - padding, ((windowHeight / 20) * 2) - padding - padding);
@@ -87,7 +92,7 @@ int main(int argc, char ** argv) {
 	Shader * ourShader = new Shader(changeX, changeY);
 	Field vecField(NUM_VERTICES, changeX.c_str(), changeY.c_str());
 	vecField.SetEquations(changeX, changeY);
-	float * vertices = 0;
+	float * vertices = NULL;
 	float scalingFactor = 0.001f;
 	vecField.Generate(vertices, scalingFactor);
 	initialize(vao, *ourShader, vertices);
@@ -97,13 +102,10 @@ int main(int argc, char ** argv) {
 	double initialX = 0;
 	double initialY = 0;
 
-	changeX = "(cos(4 * ((x*x) + (y*y))))";
-	changeY = "((y*y) - (x*x))";
-
 	char* dx = new char[200];
 	char* dy = new char[200];
-	strcpy(dx, "x + y");
-	strcpy(dy, "y - x");
+	strcpy(dx, changeX.c_str());
+	strcpy(dy, changeY.c_str());
 	float tempPixel = pixelSize;
 	int renderedPixels = NUM_PIXELS;
 	int tempPixels = NUM_PIXELS;

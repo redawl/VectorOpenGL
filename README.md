@@ -16,13 +16,13 @@ Another issue is that when the speed option is increased, it breaks the zoom eff
 
 On gentoo:
 ```bash
-emerge -a media-libs/glfw media-libs/openpgl
+emerge -a media-libs/glfw virtual/opengl media-libs/imgui[glfw]
 ```
 
 ## Building
 With the above dependencies installed, building should be as simple as:
 ```bash
-$ make clean all
+$ make clean vog
 ```
 
 Then run with:

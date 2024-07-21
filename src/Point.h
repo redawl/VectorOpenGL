@@ -1,6 +1,5 @@
 #ifndef POINT_H
 #define POINT_H
-#include <iostream>
 #include <fstream>
 #include "exprtk.hpp"
 
@@ -22,3 +21,4 @@ private:
 	bool isCoolingDown;
 };
 #endif
+
