@@ -6,7 +6,6 @@
 #include <string>
 #include <fstream>
 #include <sstream>
-#include <iostream>
 
 // Shader blobs
 extern uint8_t shader_vs[];

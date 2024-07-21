@@ -10,7 +10,7 @@
 #include <imgui/imgui_impl_glfw.h>
 #include <imgui/imgui_impl_opengl3.h>
 
-#define VERSION "0.1.1"
+#define VERSION "0.1.2"
 
 const int NUM_VERTICES = 200;
 const int NUM_PIXELS   = NUM_VERTICES * NUM_VERTICES;
