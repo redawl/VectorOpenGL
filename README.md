@@ -13,11 +13,7 @@ Another issue is that when the speed option is increased, it breaks the zoom eff
 ## Dependencies
 - glfw3
 - opengl3
-
-On gentoo:
-```bash
-emerge -a media-libs/glfw virtual/opengl media-libs/imgui[glfw]
-```
+- imgui with glfw support enabled
 
 ## Building
 With the above dependencies installed, building should be as simple as:
