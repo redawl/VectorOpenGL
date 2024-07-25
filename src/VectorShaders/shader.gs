@@ -32,7 +32,12 @@ void main(){
 	
 	// trail generation
     for(int i = index; i >= 0; i--){
-		gl_Position = scaler * vec4(x + (currX * (1 / tempScale)), y + (currY * (1 / tempScale)), 0.0, 1.0);
+		gl_Position = scaler * vec4(
+            x + (currX * (1 / tempScale)),
+            y + (currY * (1 / tempScale)),
+            0.0,
+            1.0
+        );
 		ColorVec = vec4(r, 0, b, 1.0f);
 		EmitVertex();
 		r *= fade;

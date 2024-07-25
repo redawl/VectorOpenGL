@@ -39,21 +39,32 @@ int main(int argc, char ** argv) {
     }
 
 	srand(time(0));
-	glfwInit();
+    // Glfw init
+	if(glfwInit() == GLFW_FALSE){
+        std::cerr << "Failed to intilialize GLFW!" << std::endl;
+        return -1;
+    }
+
 	glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 3);
 	glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 3);
 	glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
-	int windowHeight = glfwGetVideoMode(glfwGetPrimaryMonitor())->height;
-	int windowWidth = glfwGetVideoMode(glfwGetPrimaryMonitor())->width;
+
+    GLFWmonitor * primaryMonitor = glfwGetPrimaryMonitor();
+	int windowHeight = glfwGetVideoMode(primaryMonitor)->height;
+	int windowWidth = glfwGetVideoMode(primaryMonitor)->width;
 	float pixelSize = windowHeight / 540;
 
-	GLFWwindow* window = glfwCreateWindow(windowWidth, windowHeight, "Vector Field Generator", glfwGetPrimaryMonitor(), NULL);
+    std::cout << "Initialized with window height " << windowHeight << " and width "
+        << windowWidth << ", pixel size " << pixelSize << std::endl;
+
+	GLFWwindow* window = glfwCreateWindow(windowWidth, windowHeight, "Vector Field Generator", primaryMonitor, NULL);
 	
 	if (window == NULL) {
-		std::cout << "Failed to create GLFW window" << std::endl;
+		std::cerr << "Failed to create GLFW window!" << std::endl;
 		glfwTerminate();
 		return -1;
 	}
+
 	glfwMakeContextCurrent(window);
 	glfwSetFramebufferSizeCallback(window, framebuffer_size_callback);
 	glfwSetScrollCallback(window, scroll_callback);
