@@ -1,11 +1,9 @@
 #include <glad/gl.h>
 #include <GLFW/glfw3.h>
 #include <iostream>
-#include <fstream>
 #include "Shader.h"
 #include "Field.h"
 #include "Point.h"
-#include <time.h>
 #include <imgui/imgui.h>
 #include <imgui/imgui_impl_glfw.h>
 #include <imgui/imgui_impl_opengl3.h>
@@ -22,10 +20,10 @@ void framebuffer_size_callback(GLFWwindow * window, int width, int height);
 void processInput(GLFWwindow * window);
 
 // initializes all necessary objects
-void initialize(unsigned int& vao, Shader& ourShader, float*& vertices);
+void initialize(unsigned int& vao, Shader * ourShader, float * vertices);
 
 // call this each loop
-void display(unsigned int& vao, Shader& ourShader, float* vertices, int renderedPixels);
+void display(unsigned int& vao, Shader * ourShader, float* vertices, int renderedPixels);
 
 // scrollwheel
 void scroll_callback(GLFWwindow* window, double xoffset, double yoffset); 
@@ -72,7 +70,7 @@ int main(int argc, char ** argv) {
 	glfwSwapInterval(1);
 	glfwSetInputMode(window, GLFW_STICKY_MOUSE_BUTTONS, GLFW_TRUE);
 
-	if (!gladLoadGL((GLADloadfunc)glfwGetProcAddress)) {
+	if (!gladLoadGL(glfwGetProcAddress)) {
 		std::cout << "Failed to initialize GLAD" << std::endl;
 		return -1;
 	}
@@ -106,7 +104,7 @@ int main(int argc, char ** argv) {
 	float * vertices = NULL;
 	float scalingFactor = 0.001f;
 	vecField.Generate(vertices, scalingFactor);
-	initialize(vao, *ourShader, vertices);
+	initialize(vao, ourShader, vertices);
 	
 	double currX = 0;
 	double currY = 0;
@@ -147,7 +145,7 @@ int main(int argc, char ** argv) {
 
 		processInput(window);
 		vecField.Generate(vertices, scalingFactor);
-		display(vao, *ourShader, vertices, renderedPixels);
+		display(vao, ourShader, vertices, renderedPixels);
 
 		// Imgui Stuff
 		ImGui_ImplOpenGL3_NewFrame();
@@ -215,7 +213,7 @@ void processInput(GLFWwindow* window) {
 	}
 }
 
-void initialize(unsigned int& vao, Shader& ourShader, float*& vertices) {
+void initialize(unsigned int& vao, Shader * ourShader, float * vertices) {
 	glEnable(GL_PROGRAM_POINT_SIZE);
 	glGenVertexArrays(1, &vao);
 	glBindVertexArray(vao);
@@ -226,26 +224,26 @@ void initialize(unsigned int& vao, Shader& ourShader, float*& vertices) {
 	glBindBuffer(GL_ARRAY_BUFFER, vbo);
 	glBufferData(GL_ARRAY_BUFFER, 4 * NUM_PIXELS * sizeof(float), vertices, GL_DYNAMIC_DRAW);
 
-	int position = glGetAttribLocation(ourShader.ID, "aPos");
+	int position = glGetAttribLocation(ourShader->ID, "aPos");
 
 	glVertexAttribPointer(position, 2, GL_FLOAT, GL_FALSE, 4 * sizeof(float), (void*)0);
 
 	glEnableVertexAttribArray(position);
 
-	int timePos = glGetAttribLocation(ourShader.ID, "time");
+	int timePos = glGetAttribLocation(ourShader->ID, "time");
 	glVertexAttribPointer(timePos, 1, GL_FLOAT, GL_FALSE, 4 * sizeof(float), (void*)(2 * sizeof(float)));
 	glEnableVertexAttribArray(timePos);
 
-	int fadePos = glGetAttribLocation(ourShader.ID, "fade");
+	int fadePos = glGetAttribLocation(ourShader->ID, "fade");
 	glVertexAttribPointer(fadePos, 1, GL_FLOAT, GL_FALSE, 4 * sizeof(float), (void*)(3 * sizeof(float)));
 	glEnableVertexAttribArray(fadePos);
 }
 
-void display(unsigned int& vao, Shader& ourShader, float * vertices, int renderedPixels) {
+void display(unsigned int& vao, Shader * ourShader, float * vertices, int renderedPixels) {
 	glBindVertexArray(vao);
 	glBufferSubData(GL_ARRAY_BUFFER, 0, 4 * NUM_PIXELS * sizeof(float), vertices);
-	ourShader.setFloat("Scale", (float)y_offset);
-	ourShader.use();
+	ourShader->setFloat("Scale", (float)y_offset);
+	ourShader->use();
 	glDrawArrays(GL_POINTS, 0, renderedPixels);
 }
 
@@ -253,6 +251,6 @@ void scroll_callback(GLFWwindow* window, double xoffset, double yoffset)
 {
 	if(y_offset - yoffset < 5 && y_offset - yoffset >=1)
 		y_offset -= yoffset;
-	std::cout << y_offset << std::endl;
+	std::cout << "Zoom level " << y_offset << std::endl;
 }
 

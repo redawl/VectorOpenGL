@@ -4,7 +4,6 @@
 #include <glad/gl.h>
 
 #include <string>
-#include <fstream>
 #include <sstream>
 
 // Shader blobs
@@ -32,25 +31,6 @@ private:
     std::string fShaderCode = std::string((char *) shader_fs, shader_fs_size);
     std::string gShaderCode = std::string((char *) shader_gs, shader_gs_size);
 	// Helper methods
-	std::string readFile(const char * filePath) const {
-		std::ifstream fileStream;
-		std::stringstream fileStringStream;
-		std::string fileContents;
-		fileStream.exceptions(std::ifstream::failbit | std::ifstream::badbit);
-		try {
-			fileStream.open(filePath);
-			fileStringStream << fileStream.rdbuf();
-			fileStream.close();
-			fileContents = fileStringStream.str();
-			
-			return fileContents;
-		} catch (std::ifstream::failure e){
-			throw new std::runtime_error("ERROR: File not successfully read");
-		}
-
-		throw new std::runtime_error("ERROR: This should never happen");
-	}
-
 	unsigned int compileShader(GLuint SHADER_TYPE, const char * shaderCode) {
 		unsigned int shader;
 		int success;

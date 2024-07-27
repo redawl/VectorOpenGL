@@ -10,7 +10,7 @@ INSTALL=install
 
 .PHONY: clean install
 
-shader.%.o: src/shader.%.S
+shader.%.o: src/shader.%.S src/VectorShaders/shader.%
 	$(CC) -c $< -o $@
 
 $(EXE): $(OBJECTS)

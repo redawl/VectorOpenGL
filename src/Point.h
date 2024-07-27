@@ -1,6 +1,5 @@
 #ifndef POINT_H
 #define POINT_H
-#include <fstream>
 #include "exprtk.hpp"
 
 class Point {
