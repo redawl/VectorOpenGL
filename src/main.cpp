@@ -28,7 +28,8 @@ void display(unsigned int& vao, Shader * ourShader, float* vertices, int rendere
 // scrollwheel
 void scroll_callback(GLFWwindow* window, double xoffset, double yoffset); 
 
-double y_offset = 1;//current y offset from scroll wheel
+// Current zoom level
+double zoomLevel = 1;
 
 int main(int argc, char ** argv) {
     if(argc > 1 && strncmp(argv[1], "-v", 2) == 0) {
@@ -96,14 +97,16 @@ int main(int argc, char ** argv) {
 	glEnable(GL_PROGRAM_POINT_SIZE);
 
 	unsigned int vao;
-	std::string changeX = "x + y";
-	std::string changeY = "y - x";
-	Shader * ourShader = new Shader(changeX, changeY);
-	Field vecField(NUM_VERTICES, changeX.c_str(), changeY.c_str());
-	vecField.SetEquations(changeX, changeY);
+	char* dx = new char[200];
+	char* dy = new char[200];
+	strcpy(dx, "x + y");
+	strcpy(dy, "y - x");
+	Shader * ourShader = new Shader(dx, dy);
+	Field vecField(NUM_VERTICES, dx, dy);
+	vecField.SetEquations(dx, dy);
 	float * vertices = NULL;
-	float scalingFactor = 0.001f;
-	vecField.Generate(vertices, scalingFactor);
+	float speedFactor = 0.001f;
+	vecField.Generate(vertices, speedFactor);
 	initialize(vao, ourShader, vertices);
 	
 	double currX = 0;
@@ -111,14 +114,10 @@ int main(int argc, char ** argv) {
 	double initialX = 0;
 	double initialY = 0;
 
-	char* dx = new char[200];
-	char* dy = new char[200];
-	strcpy(dx, changeX.c_str());
-	strcpy(dy, changeY.c_str());
 	float tempPixel = pixelSize;
 	int renderedPixels = NUM_PIXELS;
 	int tempPixels = NUM_PIXELS;
-	float tempScale = 1.0f;
+	float speed = 1.0f;
 
 	while (!glfwWindowShouldClose(window)) {
 		// Clear canvas for new render
@@ -129,10 +128,10 @@ int main(int argc, char ** argv) {
 		int mouseState = glfwGetMouseButton(window, GLFW_MOUSE_BUTTON_LEFT);
 		if (mouseState == GLFW_PRESS && initialX + currX  <= windowHeight && initialY + currY <= windowHeight) {
 			glfwGetCursorPos(window, &currX, &currY);
-			ourShader->setFloat("currX", scalingFactor * 2.00f * (float)(currX - initialX));
-			ourShader->setFloat("currY", scalingFactor * 2.00f * -(float)(currY - initialY));
 			currX -= initialX;
 			currY -= initialY;
+			ourShader->setFloat("xOffset", 0.002f *  (float)(currX));
+			ourShader->setFloat("yOffset", 0.002f * -(float)(currY));
 		}
 		else {
 			glfwGetCursorPos(window, &initialX, &initialY);
@@ -140,11 +139,11 @@ int main(int argc, char ** argv) {
 			initialY -= currY;
 		}
 		
-		ourShader->setFloat("scalingFactor", scalingFactor);
+		ourShader->setFloat("speedFactor", speedFactor);
 		ourShader->setFloat("pixelSize", pixelSize);
 
 		processInput(window);
-		vecField.Generate(vertices, scalingFactor);
+		vecField.Generate(vertices, speedFactor);
 		display(vao, ourShader, vertices, renderedPixels);
 
 		// Imgui Stuff
@@ -159,12 +158,10 @@ int main(int argc, char ** argv) {
 		ImGui::InputText("dx", dx, 200);
 		ImGui::InputText("dy", dy, 200);
 		if (ImGui::Button("Save")) {
-			changeX = dx;
-			changeY = dy;
-			vecField.SetEquations(changeX, changeY);
+			vecField.SetEquations(dx, dy);
 
 			delete ourShader;
-			ourShader = new Shader(changeX, changeY);
+			ourShader = new Shader(dx, dy);
 		}
 		ImGui::End();
 		ImGui::Begin("Options");
@@ -173,11 +170,11 @@ int main(int argc, char ** argv) {
 		ImGui::SetWindowFontScale(windowHeight / 1080);
 		ImGui::InputFloat("Pixel Size (Max 100)", &tempPixel, 0, 0);
 		ImGui::InputInt("Number of Pixels (Max 40000)", &tempPixels, 0, 0);
-		ImGui::InputFloat("Speed", &tempScale, 0, 0);
+		ImGui::InputFloat("Speed", &speed, 0, 0);
 		if (ImGui::Button("Update")) {
 			pixelSize = tempPixel <= 100 ? tempPixel : 100;
 			renderedPixels = tempPixels <= 40000 ? tempPixels : 40000 ;
-			scalingFactor = ((tempScale * tempScale <= 100.0f) && tempScale != 0 ? tempScale * tempScale : 100.0f) * 0.001f;
+			speedFactor = ((speed * speed <= 100.0f) && speed != 0 ? speed * speed : 100.0f) * 0.001f;
 		}
 		ImGui::End();
 		ImGui::Begin("Info");
@@ -242,15 +239,15 @@ void initialize(unsigned int& vao, Shader * ourShader, float * vertices) {
 void display(unsigned int& vao, Shader * ourShader, float * vertices, int renderedPixels) {
 	glBindVertexArray(vao);
 	glBufferSubData(GL_ARRAY_BUFFER, 0, 4 * NUM_PIXELS * sizeof(float), vertices);
-	ourShader->setFloat("Scale", (float)y_offset);
+	ourShader->setFloat("zoomLevel", (float)zoomLevel);
 	ourShader->use();
 	glDrawArrays(GL_POINTS, 0, renderedPixels);
 }
 
 void scroll_callback(GLFWwindow* window, double xoffset, double yoffset)
 {
-	if(y_offset - yoffset < 5 && y_offset - yoffset >=1)
-		y_offset -= yoffset;
-	std::cout << "Zoom level " << y_offset << std::endl;
+	if(zoomLevel - yoffset < 5 && zoomLevel - yoffset >=1)
+		zoomLevel -= yoffset;
+	std::cout << "Zoom level " << zoomLevel << std::endl;
 }
 

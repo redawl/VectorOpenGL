@@ -4,7 +4,7 @@
 #include <glad/gl.h>
 
 #include <string>
-#include <sstream>
+#include <iostream>
 
 // Shader blobs
 extern uint8_t shader_vs[];
@@ -49,7 +49,8 @@ private:
 		glGetShaderiv(shader, GL_COMPILE_STATUS, &success);
 		if(!success){
 			glGetShaderInfoLog(shader, 512, NULL, infoLog);
-			throw new std::runtime_error(infoLog);
+			std::cerr << infoLog << std::endl;
+            exit(-1);
 		}
 
 		return shader;

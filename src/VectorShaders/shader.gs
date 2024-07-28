@@ -7,22 +7,22 @@ in TRANSFER{
 	float fade;
 }transfer[];
 
-uniform float Scale;
-uniform float currX;
-uniform float currY;
-uniform float scalingFactor;
+uniform float zoomLevel;
+uniform float xOffset;
+uniform float yOffset;
+uniform float speedFactor;
 uniform float pixelSize;
 
 void main(){
-	float tempScale = 1 / Scale;
+	float scale = 1 / zoomLevel;
 	
-	mat4 scaler;
-	scaler[0] = vec4(tempScale, 0, 0, 0);
-	scaler[1] = vec4(0, tempScale, 0, 0);
-	scaler[2] = vec4(0, 0, tempScale, 0);
-	scaler[3] = vec4(0, 0, 0, 1);
+	mat4 transformer;
+	transformer[0] = vec4(scale, 0, 0, 0);
+	transformer[1] = vec4(0, scale, 0, 0);
+	transformer[2] = vec4(0, 0, scale, 0);
+	transformer[3] = vec4(0, 0, 0, 1);
 
-	gl_PointSize = pixelSize * (tempScale);
+	gl_PointSize = pixelSize / zoomLevel;
 	float x = gl_in[0].gl_Position.x;
 	float y = gl_in[0].gl_Position.y;
 	float r = transfer[0].fade;
@@ -32,9 +32,9 @@ void main(){
 	
 	// trail generation
     for(int i = index; i >= 0; i--){
-		gl_Position = scaler * vec4(
-            x + (currX * (1 / tempScale)),
-            y + (currY * (1 / tempScale)),
+		gl_Position = transformer * vec4(
+            x + (xOffset * zoomLevel),
+            y + (yOffset * zoomLevel),
             0.0,
             1.0
         );
@@ -42,8 +42,8 @@ void main(){
 		EmitVertex();
 		r *= fade;
 		b *= fade;
-		x -= scalingFactor * (X_EQUATION);
-		y -= scalingFactor * (Y_EQUATION);
+		x -= speedFactor * (X_EQUATION);
+		y -= speedFactor * (Y_EQUATION);
 	}
 	EndPrimitive();
 }
