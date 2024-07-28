@@ -1,4 +1,4 @@
-#include "Field.h"
+#include "field.h"
 
 Field::Field(int size, std::string x, std::string y) {
 	pointField = new Point*[size];

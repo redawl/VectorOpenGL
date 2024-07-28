@@ -1,12 +1,13 @@
+#include <iostream>
+
 #include <glad/gl.h>
 #include <GLFW/glfw3.h>
-#include <iostream>
-#include "Shader.h"
-#include "Field.h"
-#include "Point.h"
 #include <imgui/imgui.h>
 #include <imgui/imgui_impl_glfw.h>
 #include <imgui/imgui_impl_opengl3.h>
+
+#include "shader.h"
+#include "field.h"
 
 #define VERSION "0.1.3"
 

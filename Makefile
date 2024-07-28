@@ -4,7 +4,7 @@ CXXFLAGS=$(COMMONFLAGS)
 LDFLAGS=-lglfw -limgui
 DESTDIR?=/usr
 PREFIX?=/local
-OBJECTS=src/main.o src/Shader.o src/Field.o src/Point.o src/glad/gl.o shader.vs.o shader.fs.o shader.gs.o
+OBJECTS=src/main.o src/shader.o src/field.o src/point.o src/glad/gl.o shader.vs.o shader.fs.o shader.gs.o
 EXE=vog
 INSTALL=install
 

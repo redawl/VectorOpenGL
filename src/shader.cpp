@@ -1,4 +1,4 @@
-#include "Shader.h"
+#include "shader.h"
 
 Shader::Shader(std::string xEquation, std::string yEquation) {
 	// compile shaders

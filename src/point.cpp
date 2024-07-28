@@ -1,4 +1,4 @@
-#include "Point.h"
+#include "point.h"
 
 Point::Point() {
 	x = ((float)rand()) / (RAND_MAX / 20.0f) - 10.0f;

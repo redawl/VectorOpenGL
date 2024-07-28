@@ -1,6 +1,6 @@
 #ifndef FIELD_H
 #define FIELD_H
-#include "Point.h"
+#include "point.h"
 
 class Field {
 public:
