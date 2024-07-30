@@ -1,10 +1,7 @@
 #include "field.h"
 
 Field::Field(int size, std::string x, std::string y) {
-	pointField = new Point*[size];
-	for (int i = 0; i < size; i++) {
-		pointField[i] = new Point[size];
-	}
+	pointField = new Point[size];
 	fieldSize = size;
 	this->x = 0;
 	this->y = 0;
@@ -12,33 +9,29 @@ Field::Field(int size, std::string x, std::string y) {
 }
 
 Field::~Field() {
-	for (int i = 0; i < fieldSize; i++){
-		delete [] pointField[i];
-	}
 	delete [] pointField;
 }
 
-void Field::Generate(float *& vertices, float scalingFactor) {
+void Field::Generate(float *& vertices, float speedFactor) {
 	if (vertices == NULL)
-		vertices = new float[fieldSize * fieldSize * 4];
+		vertices = new float[fieldSize * 4];
 	int index = 0;
 	for (int i = 0; i < fieldSize; i++) {
-		for (int j = 0; j < fieldSize; j++) {
-			float time = 0;
-			float fade = 1;
-			if (!pointField[i][j].checkIfCooling())
-				SetPointPos(pointField[i][j], time, scalingFactor);
-			else
-				pointField[i][j].CoolDown(x, y, time, fade);
-			vertices[index] = x;
-			index++;
-			vertices[index] = y;
-			index++;
-			vertices[index] = time;
-			index++;
-			vertices[index] = fade;
-			index++;
-		}
+        float time = 0;
+        float fade = 1;
+        if (pointField[i].checkIfCooling()) {
+            pointField[i].CoolDown(x, y, time, fade);
+        } else {
+            SetPointPos(pointField[i], time, speedFactor);
+        }
+        vertices[index] = x;
+        index++;
+        vertices[index] = y;
+        index++;
+        vertices[index] = time;
+        index++;
+        vertices[index] = fade;
+        index++;
 	}
 }
 
@@ -52,10 +45,10 @@ bool Field::SetEquations(std::string x, std::string y) {
 	return parser.compile(x, expressionX) && parser.compile(y, expressionY);
 }
 
-void Field::SetPointPos(Point & a_point, float & time, float scalingFactor) {
+void Field::SetPointPos(Point & a_point, float & time, float speedFactor) {
 	a_point.getCurrPos(x, y, time);
-	float tempX = scalingFactor * expressionX.value();
-	float tempY = scalingFactor * expressionY.value();
+	float tempX = speedFactor * expressionX.value();
+	float tempY = speedFactor * expressionY.value();
 	
 	a_point.setCurrPos(tempX, tempY);
 }

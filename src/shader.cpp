@@ -23,7 +23,8 @@ Shader::Shader(std::string xEquation, std::string yEquation) {
 	if (!success) {
 		char infoLog[512];
 		glGetProgramInfoLog(ID, 512, NULL, infoLog);
-		throw new std::runtime_error(infoLog);
+		std::cerr << infoLog << std::endl;
+        exit(-1);
 	}
 
 	glDeleteShader(vertex);

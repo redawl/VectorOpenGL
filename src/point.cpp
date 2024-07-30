@@ -36,18 +36,12 @@ void Point::getCurrPos(float& x, float& y, float& time) {
 
 void Point::setCurrPos(float x, float y) {
 	this->x += x;
-	if (this->x > 10.0f || this->x < -10.0f) {
-		resetX();
-	}
 	this->y += y;
-	if (this->y > 10.0f || this->y < -10.0f) {
-		resetY();
-	}
 }
 
 void Point::CoolDown(float &x, float &y, float & time, float & fade) {
 	time = this->time;
-	if (this->time != 0) {
+	if (this->time > 0) {
 		this->time--;
 		x = this->x;
 		y = this->y;
