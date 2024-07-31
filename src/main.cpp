@@ -100,7 +100,7 @@ int main(int argc, char ** argv) {
 
 	initialize(vao, shader, vertices);
 
-	float tempPixel = pixelSize;
+	float tempPixelSize = pixelSize;
 	int renderedPixels = NUM_PIXELS;
 	int tempPixels = NUM_PIXELS;
 	float speed = 1.0f;
@@ -142,8 +142,12 @@ int main(int argc, char ** argv) {
 			shader = new Shader(dx, dy);
 		}
 
-		if (gui->optionsBox(tempPixel, tempPixels, speed)) {
-			pixelSize = tempPixel <= 100 ? tempPixel : 100;
+		if (gui->optionsBox(tempPixelSize, tempPixels, speed)) {
+			pixelSize = tempPixelSize <= 100 ? tempPixelSize : 100;
+            if(tempPixelSize < 1){
+                pixelSize = 1;
+            }
+            tempPixelSize = pixelSize;
 			renderedPixels = tempPixels <= 40000 ? tempPixels : 40000 ;
 			speedFactor = ((speed * speed <= 100.0f) && speed != 0 ? speed * speed : 100.0f) * 0.001f;
 		}
